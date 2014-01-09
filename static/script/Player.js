@@ -146,12 +146,21 @@ function Player(gl_, grid_size) {
 	}
     };
 
+    this.endLeftMove = function() {
+	    this.in_left_move = false;
+	    if (this.key_down[LEFT]) this.startLeftMove();
+    }
+
+    this.endRightMove = function() {
+	    this.in_right_move = false;
+	    if (this.key_down[RIGHT]) this.startRightMove();
+    }
+
     this.moveRight = function() {
 	if (this.right_started === false) return;
 	var count = ++this.right_count;
 	if (count >= this.move_dist.length) {
-	    this.in_right_move = false;
-	    if (this.key_down[RIGHT]) this.startRightMove();
+	    this.endRightMove();
 	    return;
 	}
 	this.movement[0] += this.move_dist[count] * player_width * dist;
@@ -161,8 +170,7 @@ function Player(gl_, grid_size) {
 
 	var count = (++this.left_count);
 	if (count >= this.move_dist.length) {
-	    this.in_left_move = false;
-	    if (this.key_down[LEFT]) this.startLeftMove();
+	    this.endLeftMove();
 	    return;
 	}
 	this.movement[0] -= this.move_dist[count] * player_width * dist;
@@ -202,13 +210,13 @@ function Player(gl_, grid_size) {
 		object.collided = WALL_E;
 		// Convert to 1.0 scale, round to integer, convert back
 		this.movement[0] = this.grid * Math.ceil(this.movement[0] / this.grid);
-		this.in_left_move = false;
+		this.endLeftMove();
 	    } else if (this.movement_old[0] + this.width <= object.x_min) {
 		object.collided = WALL_W;
 		collision_string.initBuffers(theCanvas.gl);
 		// Convert to 1.0 scale, round to integer, convert back
 		this.movement[0] = this.grid * Math.floor(this.movement[0] / this.grid);
-		this.in_right_move = false;
+		this.endRightMove();
 	    } else console.log("Collision error..?");
 	} else {
 	    object.collided = WALL_NONE;
