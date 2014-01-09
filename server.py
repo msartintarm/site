@@ -3,6 +3,7 @@ import tornado.ioloop, tornado.httpserver, tornado.web, tornado.websocket
 
 OS = os.path.dirname(__file__)
 STATIC = os.path.join(OS, "static")
+AUDIO = os.path.join(OS, "audio")
 IMAGES = os.path.join(OS, "images")
 GAME = os.path.join(OS, "html/game.html")
 MISTAKE = os.path.join(OS, "html/error.html")
@@ -26,7 +27,9 @@ class TarmSocket(tornado.websocket.WebSocketHandler):
 tarm_app = tornado.web.Application(handlers=[
 	(r"/", TarmHandler),
 	(r"/websocket", TarmSocket),
-    (r"/images/(.*)", tornado.web.StaticFileHandler, { "path": IMAGES })],	
+    (r"/images/(.*)", tornado.web.StaticFileHandler, { "path": IMAGES }),
+    (r"/music/(.*)", tornado.web.StaticFileHandler, { "path": AUDIO })
+    ],
     debug=True, gzip=True, static_path=STATIC)
 
 def start_server():
