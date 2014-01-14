@@ -27,7 +27,8 @@ function Player(gl_, grid_size) {
     var i; // for init loop
 
     // Setup player textures
-    this.name = document.getElementById("player_name").value;
+//    this.name = document.getElementById("player_name").value;
+    this.name = "Michael";
     this.movement = vec3.create();
     this.movement_old = vec3.create();
 

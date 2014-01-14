@@ -28,33 +28,34 @@ function GameLevel(game, config) {
         return e;
     };
 
-    var $parent = $("div");
+    var $parent = $("<div></div>");
 
 //    var wrap = createElementMST("div", { className: "wrap" });
-    var wrap = $("div", { className: 'wrap' });
+    var wrap = $("<div></div>", { className: 'wrap' });
     $parent.append(wrap);
 
-   var $disp = $("div", { id: "display"});
+   var $disp = $("<div></div>", { id: "display"});
     wrap.append($disp);
 
-    var params = $("span", { id: "game_params" });
+    var params = $("<span></span>", { id: "game_params" });
     $disp.append(params);
 
-    var name = $("div", { id: "game_name" });
+    var name = $("<div></div>", { id: "game_name" });
     name.append(document.createTextNode("Name:"));
     params.append(name);
 
-    var entry = $("div", { className: "floating game_input" });
+    var entry = $("<div></div>", { className: "floating game_input" });
     entry.append($("input", {
         type: "text", id: "player_name", value: "Noname" }));
     params.append(entry);
 
     params.append("br");
 
+    document.getElementById("banner").appendChild($parent[0]);
+
     // Define functions that construct the div elements, then call them.
     this.setupDivs = function() {
 
-    document.getElementById("banner").appendChild($parent[0]);
 //        document.getElementById("banner").appendChild($parent[0]);
 
         // Let's start with the printer.

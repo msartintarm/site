@@ -163,6 +163,7 @@ div.main {
 }
 
 table#button_table {
+    width:100%;
     background-color: #88aabb;
     border: 10px inset #666666;
 }

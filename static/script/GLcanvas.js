@@ -85,14 +85,14 @@ function GLcanvas() {
 
 	    this.status = document.getElementById("glcanvas_status");
 	    this.canvas = document.getElementById("glcanvas");
-	    this.canvas.style.display = "block";
+	    $(this.canvas).show();
 
             // Initialize Error Division Log
             // re-write console.log to show within the window itself
             console.log = (function(old_function, div_log) {
 
                 var d = document.getElementById(div_log);
-//                $(d).show();
+                $(d).show();
                 var r = d.rows;
                 var w = d.style.width;
                 d.onclick = function() {
