@@ -3,6 +3,7 @@
 function GLshader() {
     this.fragment = [];
     this.vertex = [];
+    console.log("yo");
 
     var frameFn = function(frame_id, shader_id) {
         var f = document.getElementById(frame_id);
@@ -59,12 +60,6 @@ GLshader.close = function(button, shader) {
         shader.style.display = "none";
     };
 };
-
-(function() {
-    var button = document.getElementById("shader_viewer");
-    var shaders = document.getElementById("shader1");
-    button.onclick = GLshader.view(button, shaders);
-} ());
 
 /*
  * http://dev.opera.com/articles/view/raw-webgl-part1-getting-started/

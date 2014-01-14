@@ -6,6 +6,7 @@
     <meta charset="UTF-8"/>
     <title>WebGL Demo</title>
     <link rel="stylesheet" type="text/css" href="{{ static_url("styles.css") }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static_url("libs/jquery-ui.css") }}"/>
     <link rel="icon" type="image/x-icon" href="{{ static_url("favicon.ico") }}"/>
 
     <!-- Facebook API - See
@@ -16,7 +17,10 @@
     -->
 
     <!-- External JS libraries -->
+    <script src="{{ static_url("libs/jquery.js") }}"></script>
+    <script src="{{ static_url("libs/jquery-ui.js") }}"></script>
     <script async="async" src="{{ static_url("libs/gl-matrix.js") }}"></script>
+
 
     <!-- Global constants and functions -->
     <script async="async" src="{{ static_url("script/functions.js") }}"></script>
@@ -136,70 +140,9 @@
       </div>
 
       <div class="main">
-	<!--
-	     We use a table with 2x2 cells,
-	     lumping all the links into their own cells..
-	  -->
-        <div id="web_gl" style="display:inline-block;">WebGL</div>
-        <div style="display:inline-block;"> And </div>
-        <div id="web_audio" style="display:inline-block;">Web Audio</div>
-        <div style="display:inline-block;">: A Demo </div>
-	<table id="button_table" style="width:100%;">
-	  <thead><tr>
-	      <th><u>Shapes</u></th>
-	      <th><u>Environments</u></th>
-	  </tr></thead>
-	  <tbody><tr>
-	      <td>
-		<input type="button"
-		       onclick="the_scene='cylinder';"
-		       value="Cylinder"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='skybox';"
-		       value="Skybox"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='sphere';"
-		       value="Sphere"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='stool';"
-		       value="Stool"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='text';"
-		       value="Text"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='torus';"
-		       value="Torus"
-		       class="floating beginner"/>
-	      </td>
-	      <td>
-		<input type="button"
-		       onclick="the_scene='shadow';"
-		       value="Shadows"
-		       class="floating beginner"/>
-		<input type="button"
-		       onclick="the_scene='jumbotron';"
-		       value="Jumbotron"
-		       class="floating beginner"/>
-		<input type="button"
-		       value="Maze (disabled)"
-		       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
-		<input type="button"
-		       value="Stadium (disabled)"
-		       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
-		<input type="button"
-		       onclick="the_scene='game';"
-		       value="Game"
-		       class="floating beginner"/>
-	      </td>
-	  </tr></tbody>
-	</table>
-	<canvas id="glcanvas"></canvas>
+        {% include 'canvas.html' %}
       </div>
+
       <div id="land_down_under" style="clear:both;">
         <!-- It's bad code to not specify cols, but
              width in CSS lets browsers size it properly -->
@@ -209,9 +152,7 @@
 
 
     <div id="footer">
-      <input type="button"
-	     value="(c) 2013 Batman and Robin"
-	     class="floating" />
+      <input type="button" value="(c) 2013 Batman and Robin" class="floating" />
       <div class="title" id="title4" > </div>
     </div>
     <!-- Put this element one tag scope higher to hide it. -->

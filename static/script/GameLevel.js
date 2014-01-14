@@ -6,9 +6,6 @@
  */
 function GameLevel(game, config) {
 
-    // Follows configuration and stores associated HTML DOM objects
-    var config_shadow = {};
-
     // Either op doesn't exist (val, is a '-' (= dec old), or is  a '+' (= inc old)
     var newCoordVal = function(old, op, val) {
         return (!op)? parseInt(val):
@@ -31,10 +28,10 @@ function GameLevel(game, config) {
         return e;
     };
 
-    var parent_div = document.createElement("div");
+    var $parent = $("div");
 
     var wrap = createElementMST("div", { className: "wrap" });
-    parent_div.appendChild(wrap);
+    $parent.append(wrap);
 
    var disp = createElementMST("div",
         { id: "display", style: { paddingTop: "8px", width: "100%" }});
@@ -61,8 +58,7 @@ function GameLevel(game, config) {
     // Define functions that construct the div elements, then call them.
     this.setupDivs = function() {
 
-        parent_div.style.fontSize = "20px";
-        document.getElementById("banner").appendChild(parent_div);
+        document.getElementById("banner").appendChild($parent[0]);
 
         // Let's start with the printer.
         var p = document.createElement("input");
@@ -87,10 +83,10 @@ function GameLevel(game, config) {
 
             s = "var config = {\n";
 
-            console.log(parent_div);
+            console.log($parent[0]);
 
-            for(var i = 0; i < parent_div.childNodes.length; ++i) {
-                var d = parent_div.childNodes[i];
+            for(var i = 0; i < $parent[0].childNodes.length; ++i) {
+                var d = $parent[0].childNodes[i];
                 if (d.id) {
                     s += "\"" + d.id + "\": ";
                     recursive_printer(d);
@@ -102,7 +98,7 @@ function GameLevel(game, config) {
             console.log(s);
         };
 
-        parent_div.appendChild(p);
+        $parent.append(p);
 
         var _Break = function(curr_div) {
             var b = document.createElement("div");
@@ -126,9 +122,6 @@ function GameLevel(game, config) {
             t.style.width = width;
             t.style.height = "17px";
             t.rows = 1;
-
-            if (!!config_shadow[curr_div.id]) config_shadow[curr_div.id].push(t);
-            else config_shadow[curr_div.id] = [t];
 
             curr_div.appendChild(t);
             return t;
@@ -165,8 +158,8 @@ function GameLevel(game, config) {
                     mouse_down = !mouse_down;
                     div_style.color = (mouse_down)? "#123456": the_color;
                     click_funct(); };
-            } (d.onmouseover, parent_div.style));
-            parent_div.appendChild(d);
+            } (d.onmouseover, $parent[0].style));
+            $parent.append(d);
             return d;
         };
 
@@ -208,17 +201,17 @@ function GameLevel(game, config) {
             brake.style.borderBottomColor = "#662211";
             brake.style.backgroundColor = "#33110a";
             brake.style.borderTopColor = "#130a08";
-            parent_div.appendChild(brake);
-            parent_div.appendChild(b);
-            parent_div.appendChild(d);
+            $parent.append(brake);
+            $parent.append(b);
+            $parent.append(d);
 
-            parent_div = d;
+            $parent = $(d);
 
             return d;
         };
 
         var _closeDiv = function(curr_div) {
-            parent_div = parent_div.parentElement;
+            $parent = $($parent[0].parentElement);
         };
 
         var _initMiscDiv = function() {

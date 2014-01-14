@@ -307,7 +307,7 @@ function Player(gl_, grid_size) {
                 return function() {
 		    gl_matrix.vTranslate(view_dist);
 		    vec3.negate(view_dist, view_dist);
-		}; }) (window.theCanvas.matrix));
+		}; }) (window.theCanvas.mat));
 
 //            functionz[_A] = function() { audio.log_music = !(audio.log_music); };
 //            functionz[SPACE] = function() { audio.pause(); };

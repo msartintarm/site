@@ -17,6 +17,10 @@ function GLcanvas() {
 
     this.resizeCounter = 0;
 
+    $("#shader_viewer").click(function() {
+        GLshader.view(this, $("#shader1")[0]);
+    });
+
     /**
      * Begins the canvas.
      */
@@ -73,11 +77,11 @@ function GLcanvas() {
         if (this.gl === null) {
 
 	    // One-time display methods
-	    document.getElementById("header").style.display = "none";
-	    document.getElementById("button_table").style.display = "none";
-	    document.getElementById("footer").style.display = "none";
-	    document.getElementById("shader1").style.display = "none";
-	    document.getElementById("shader_viewer").style.display = "none";
+	    $("#header").hide();
+	    $("#button_table").hide();
+	    $("#footer").hide();
+	    $("#shader1").hide();
+	    $("#shader_viewer").hide();
 
 	    this.status = document.getElementById("glcanvas_status");
 	    this.canvas = document.getElementById("glcanvas");
@@ -156,7 +160,7 @@ function GLcanvas() {
 
 	    // start matrix models
 	    theMatrix = new GLmatrix(this.gl);
-	    this.matrix = theMatrix;
+	    this.mat = theMatrix;
 
             var compiled_text = document.createTextNode("Shaders compiled.");
             var break1 = document.createElement("br");
@@ -238,25 +242,27 @@ function GLcanvas() {
         return 0;
     };
 
+    this.setViews = function(name) {
+        this.mat.setViewUniforms(this.shader[name]);
+        this.gl.uniformMatrix4fv(this.shader[name].unis["pMatU"], false, this.mat.pMatrix);
+    }
+
     this.resize = function() {
         this.canvas.width = this.canvas.parentElement.clientWidth;
         this.canvas.height = window.innerHeight - 105;
         this.gl.viewport(0, 0, this.canvas.width,
 		         this.canvas.height);
-	theMatrix.perspective(45,
-			      this.canvas.width /
-			      Math.max(1, this.canvas.height),
-			      0.1, 300000.0);
+    	this.mat.perspective(45,
+    			      this.canvas.width /
+    			      Math.max(1, this.canvas.height),
+    			      0.1, 300000.0);
 
-	this.changeShader("default");
-	theMatrix.setViewUniforms(this.shader["default"]);
-	this.gl.uniformMatrix4fv(this.shader["default"].unis["pMatU"], false, theMatrix.pMatrix);
-	this.changeShader("canvas");
-	theMatrix.setViewUniforms(this.shader["canvas"]);
-	this.gl.uniformMatrix4fv(this.shader["canvas"].unis["pMatU"], false, theMatrix.pMatrix);
-	this.changeShader("player");
-	theMatrix.setViewUniforms(this.shader["player"]);
-	this.gl.uniformMatrix4fv(this.shader["player"].unis["pMatU"], false, theMatrix.pMatrix);
+    	this.changeShader("default");
+    	this.setViews("default");
+    	this.changeShader("canvas");
+        this.setViews("canvas");
+    	this.changeShader("player");
+    	this.setViews("player");
     };
 
     /**
@@ -282,14 +288,14 @@ function GLcanvas() {
 		          canvas.gl.DEPTH_BUFFER_BIT);
 
             // Draw all our objects
-            theMatrix.push();
+            canvas.mat.push();
 
             for(var i = 0, max = canvas.objects.length;
 	        i < max; ++i) {
 	        canvas.objects[i].draw(canvas.gl);
             }
 
-            theMatrix.pop();
+            canvas.mat.pop();
 
             // filter so we don't resize every frame
             if(canvas.resizeCounter > 0) {
@@ -302,7 +308,7 @@ function GLcanvas() {
             //    this.gl.clear(this.gl.STENCIL_BUFFER_BIT);
 
             // Update viewer's matrix
-            theMatrix.update();
+            canvas.mat.update();
             if(canvas.resizeCounter > 0) {
 	        canvas.resizeCounter -= 1;
 	        if(canvas.resizeCounter === 0) {

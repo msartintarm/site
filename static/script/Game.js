@@ -1,15 +1,17 @@
 /**
  * Creates and initializes a game.
  */
+
+GRID_SIZE = 50;
+
 function Game(gl_) {
 
-    this.grid = 50;
 
     var level0 = new GameLevel(this, {
 
         //            CONFIGURATION
         // Figure out some way to document this eventually
-        "grid-size": this.grid,
+        "grid-size": GRID_SIZE,
         "textures": ["brick-texture", "heaven-texture", "rug-texture"],
         // Origin URL, destination node, loop[, loop offset, loop time])
         // These are at 120 BPM: 1 sec = 2 beats
@@ -58,7 +60,7 @@ function Game(gl_) {
 
     level0.initAudio(audio);
 
-    this.matrix = theCanvas.matrix;
+    this.matrix = theCanvas.mat;
 
     // handles movement
     this.bg_movement = vec3.create();
@@ -75,7 +77,7 @@ function Game(gl_) {
     // Jump distance is a vector of linear X values
     // When we increment y-pos by these array values, the effect is a parabolic jump
 
-    level0.initMisc(); // this.grid and viewing translation
+    level0.initMisc(); // GRID_SIZE and viewing translation
 
     this.floor = [];
     level0.initPiece(this.floor, "piece-0");
@@ -115,7 +117,7 @@ function Game(gl_) {
 
         level0.setupDivs();
 
-        level0.initMisc(); // this.grid and viewing translation
+        level0.initMisc(); // GRID_SIZE and viewing translation
         this.floor = [];
         level0.initPiece(this.floor, "piece-0");
         this.floor_effect = 0;
@@ -182,7 +184,7 @@ function Game(gl_) {
     this.startCameraLeftMove = function() {
 
 	if (this.cam_in_left_move === true || this.cam_in_right_move === true) return;
-	this.cam_movement[0] -= (15 * this.grid);
+	this.cam_movement[0] -= (15 * GRID_SIZE);
 	this.cam_left_count = 30;
 	this.cam_in_left_move = true;
     };
@@ -190,7 +192,7 @@ function Game(gl_) {
     this.startCameraRightMove = function() {
 
 	if (this.cam_in_right_move === true || this.cam_in_left_move === true) return;
-	this.cam_movement[0] += (15 * this.grid);
+	this.cam_movement[0] += (15 * GRID_SIZE);
 	this.cam_right_count = 30;
 	this.cam_in_right_move = true;
     };
@@ -207,11 +209,11 @@ function Game(gl_) {
 	// Handle camera natively as it doesn't need much logic.
 	if (this.cam_in_right_move === true) {
 	    if ((--this.cam_right_count) < 0) this.cam_in_right_move = false;
-	    else theMatrix.vTranslate([this.grid * 0.5, 0, 0]);
+	    else theMatrix.vTranslate([GRID_SIZE * 0.5, 0, 0]);
 	}
 	if (this.cam_in_left_move === true) {
 	    if ((--this.cam_left_count) < 0) this.cam_in_left_move = false;
-	    else theMatrix.vTranslate([-this.grid * 0.5, 0, 0]);
+	    else theMatrix.vTranslate([-GRID_SIZE * 0.5, 0, 0]);
 	}
 
 	player.updateMovement(this.hi_hat === 10, audio.playSound);
