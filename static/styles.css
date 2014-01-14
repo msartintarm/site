@@ -75,6 +75,8 @@ div.wrap {
 
 div#display {
     background: url('graphics/brushed_metal.jpg') repeat-y;
+    padding-top:8px;
+    width: 100%;
 }
 
 p#glcanvas_status {
@@ -91,9 +93,15 @@ div#stadium_params {
     font-size: 20px;
 }
 
-input.stadium_input {
-    float:right;
-    width:60%;
+#game_name {
+    float:left;
+    width: 45%;
+    font-size: 16px;
+}
+
+input.game_input {
+    float: right;
+    width: 55%;
     font-family: Impact, fantasy;
     font-variant: small-caps;
 }
@@ -137,7 +145,6 @@ a:active {color: red; }
 a:hover {text-decoration: underline; color: red; }
 
 canvas#glcanvas {
-/*    position: absolute; */
     background:url(graphics/earth.jpg);
     background-size:100% 100%;
     display: none;

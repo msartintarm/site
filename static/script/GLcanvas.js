@@ -92,7 +92,7 @@ function GLcanvas() {
             console.log = (function(old_function, div_log) {
 
                 var d = document.getElementById(div_log);
-                d.style.display = "block";
+//                $(d).show();
                 var r = d.rows;
                 var w = d.style.width;
                 d.onclick = function() {

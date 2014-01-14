@@ -3,62 +3,64 @@
 
 <!-- We use a table with 2x2 cells,
      lumping all the links into their own cells.. -->
-<span id="web_gl">WebGL</span>
-<span> And </span>
-<span id="web_audio">Web Audio</span>
-<span>: A Demo </span>
-<table id="button_table" style="width:100%;">
-  <thead><tr>
-    <th><u>Shapes</u></th>
-    <th><u>Environments</u></th>
-  </tr></thead>
-  <tbody><tr>
-    <td>
-	    <input type="button"
-	       onclick="the_scene='cylinder';"
-	       value="Cylinder"
-	       class="floating beginner"/>
-  		<input type="button"
-	       onclick="the_scene='skybox';"
-	       value="Skybox"
-	       class="floating beginner"/>
-	    <input type="button"
-	       onclick="the_scene='sphere';"
-	       value="Sphere"
-	       class="floating beginner"/>
-	    <input type="button"
-	       onclick="the_scene='stool';"
-	       value="Stool"
-	       class="floating beginner"/>
-	    <input type="button"
-	       onclick="the_scene='text';"
-	       value="Text"
-	       class="floating beginner"/>
-	    <input type="button"
-	       onclick="the_scene='torus';"
-	       value="Torus"
-	       class="floating beginner"/>
-    </td>
-    <td>
-	    <input type="button"
-	       onclick="the_scene='shadow';"
-	       value="Shadows"
-	       class="floating beginner"/>
-	    <input type="button"
-	       onclick="the_scene='jumbotron';"
-	       value="Jumbotron"
-	       class="floating beginner"/>
-	    <input type="button"
-	       value="Maze (disabled)"
-	       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
-	    <input type="button"
-	       value="Stadium (disabled)"
-	       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
-	    <input type="button"
-	       onclick="the_scene='game';"
-	       value="Game"
-	       class="floating beginner"/>
-    </td>
-  </tr></tbody>
-</table>
-<canvas id="glcanvas"></canvas>
+<div class="main">
+  <span id="web_gl">WebGL</span>
+  <span> And </span>
+  <span id="web_audio">Web Audio</span>
+  <span>: A Demo </span>
+  <table id="button_table" style="width:100%;">
+    <thead><tr>
+      <th><u>Shapes</u></th>
+      <th><u>Environments</u></th>
+    </tr></thead>
+    <tbody><tr>
+      <td>
+  	    <input type="button"
+  	       onclick="the_scene='cylinder';"
+  	       value="Cylinder"
+  	       class="floating beginner"/>
+    		<input type="button"
+  	       onclick="the_scene='skybox';"
+  	       value="Skybox"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       onclick="the_scene='sphere';"
+  	       value="Sphere"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       onclick="the_scene='stool';"
+  	       value="Stool"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       onclick="the_scene='text';"
+  	       value="Text"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       onclick="the_scene='torus';"
+  	       value="Torus"
+  	       class="floating beginner"/>
+      </td>
+      <td>
+  	    <input type="button"
+  	       onclick="the_scene='shadow';"
+  	       value="Shadows"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       onclick="the_scene='jumbotron';"
+  	       value="Jumbotron"
+  	       class="floating beginner"/>
+  	    <input type="button"
+  	       value="Maze (disabled)"
+  	       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
+  	    <input type="button"
+  	       value="Stadium (disabled)"
+  	       class="floating beginner" style="color:#aa4455;font-size:22px;" disabled="disabled"/>
+  	    <input type="button"
+  	       onclick="the_scene='game';"
+  	       value="Game"
+  	       class="floating beginner"/>
+      </td>
+    </tr></tbody>
+  </table>
+  <canvas id="glcanvas"></canvas>
+</div>

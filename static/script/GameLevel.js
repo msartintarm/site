@@ -30,35 +30,32 @@ function GameLevel(game, config) {
 
     var $parent = $("div");
 
-    var wrap = createElementMST("div", { className: "wrap" });
+//    var wrap = createElementMST("div", { className: "wrap" });
+    var wrap = $("div", { className: 'wrap' });
     $parent.append(wrap);
 
-   var disp = createElementMST("div",
-        { id: "display", style: { paddingTop: "8px", width: "100%" }});
-    wrap.appendChild(disp);
+   var $disp = $("div", { id: "display"});
+    wrap.append($disp);
 
-    var params = createElementMST("div", { id: "game_params",
-    style: { display: "inline-block" }});
-    disp.appendChild(params);
+    var params = $("span", { id: "game_params" });
+    $disp.append(params);
 
-    var name = createElementMST("div", { style: {
-        cssFloat: "left", width: "45%", fontSize: "16px"}});
-    name.appendChild(document.createTextNode("Name:"));
-    params.appendChild(name);
+    var name = $("div", { id: "game_name" });
+    name.append(document.createTextNode("Name:"));
+    params.append(name);
 
-    var entry = createElementMST("div", { style: {
-        cssFloat: "right", width: "55%" }});
-    entry.appendChild(createElementMST("input", {
-        type: "text", className: "floating stadium_input",
-        id: "player_name", value: "Noname" }));
-    params.appendChild(entry);
+    var entry = $("div", { className: "floating game_input" });
+    entry.append($("input", {
+        type: "text", id: "player_name", value: "Noname" }));
+    params.append(entry);
 
-    params.appendChild(document.createElement("br"));
+    params.append("br");
 
     // Define functions that construct the div elements, then call them.
     this.setupDivs = function() {
 
-        document.getElementById("banner").appendChild($parent[0]);
+    document.getElementById("banner").appendChild($parent[0]);
+//        document.getElementById("banner").appendChild($parent[0]);
 
         // Let's start with the printer.
         var p = document.createElement("input");
