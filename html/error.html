@@ -1,0 +1,46 @@
+<script src="{{ static_url("libs/jquery.js") }}"></script>
+<style>
+  .error_element, .moving { 
+     -webkit-transition: all 1.0s;  
+   -moz-transition: all 1.0s;  
+   -o-transition: all 1.0s;  
+   transition: all 1.0s;  
+  }
+
+  body {
+    background: rgb(40, 40, 70);
+  }
+  
+  .error_element { 
+    color: rgb(230, 230, 255);
+    width: 50%;
+    border-radius: 8px;
+    background-color: rgb(100, 90, 80);
+    position: relative;
+    left: 0px;
+    text-align: center;
+  }
+  .moving {
+    left: 400px;
+  }
+  .moving2 {
+    background-color: rgb(80, 70, 60);
+    top: 400px;
+  }
+</style>
+<body>
+  <div class="error_element">
+    Internal Server Error!
+  </div>
+</body>
+<script>
+  var s = function() { 
+    $(".error_element").toggleClass("moving"); 
+    setTimeout(t, 800);
+  };
+  var t = function() { 
+    $(".error_element").toggleClass("moving moving2"); 
+    setTimeout(s, 800);
+  };
+  t();
+</script>

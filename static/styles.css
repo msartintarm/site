@@ -116,6 +116,14 @@ div.square {
     float:left;
 }
 
+.square_highlight {
+    background-color: "#4455ff";
+}
+
+.squares_highlight {
+    background-color: "#123456";
+}
+
 thead {
     color: green;
     cursor: default;
@@ -183,6 +191,8 @@ input.floating, input.floating2 {
     text-align: inherit;
 }
 
+.hidden { display:none; }
+
 input.floating { color: inherit; }
 input.floating2 { color:#abcdef; }
 
@@ -190,24 +200,6 @@ input.floating:hover, input.floating2:hover {
     cursor: default;
     color:#33aabb;
 }
-
-/*
-div.main:before, div.main:after {
-    content: "";
-    position: fixed;
-    left: 0;
-    right: 0;
-    height: 10px;
-}
-div.main:before {
-    top: 0;
-    background-color: #696969;
-}
-div.main:after {
-    bottom: 0;
-    background-color: #696969;
-}
-*/
 
 div#footer {
     clear:both;
@@ -227,6 +219,18 @@ div.one_third{
     -moz-user-select: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
+}
+
+.brake {
+    height: 1px;
+    width: 95%;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-top-style: solid;
+    border-top-width: 2px;
+    border-bottom-color: rgb(102, 34, 17);
+    background-color: rgb(51, 17, 10);
+    border-top-color: rgb(19, 10, 8);
 }
 
 textarea {

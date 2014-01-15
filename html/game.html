@@ -45,6 +45,9 @@
       <iframe frameborder=0 class="shader" id="shader_color" src="{{ static_url("shaders/color.html") }}"></iframe>
       <iframe frameborder=0 class="shader" id="shader_frame" src="{{ static_url("shaders/frame.html") }}"></iframe>
     </div>
+
+    {% module Template('config.html', config=config) %}
+
     <div id="fb-root"></div>
 <!--    <div class="fb-like" data-href="http://msartintarm.github.io/online_game/demo.html" data-width="450" data-show-faces="true" data-send="false" colorscheme="dark"></div>-->
   </body>

@@ -31,72 +31,23 @@ function GameLevel(game, config) {
     var $parent = $("<div></div>");
 
 //    var wrap = createElementMST("div", { className: "wrap" });
-    var wrap = $("<div></div>", { className: 'wrap' });
-    $parent.append(wrap);
+    var $wrap = $("<div></div>", { class: 'wrap' });
+    var $disp = $("<div></div>", { id: "display"});
 
-   var $disp = $("<div></div>", { id: "display"});
-    wrap.append($disp);
+    var $params = $("<span></span>", { id: "game_params" });
+    var $name = $("<div></div>", { id: "game_name" });
+    $name.append(document.createTextNode("Name:"));
+    var $entry = $("<div></div>", { class: "floating" });
+    $entry.append("<input type='text' id='player_name' class='floating game_input' value='Noname'>");
 
-    var params = $("<span></span>", { id: "game_params" });
-    $disp.append(params);
-
-    var name = $("<div></div>", { id: "game_name" });
-    name.append(document.createTextNode("Name:"));
-    params.append(name);
-
-    var entry = $("<div></div>", { className: "floating game_input" });
-    entry.append($("input", {
-        type: "text", id: "player_name", value: "Noname" }));
-    params.append(entry);
-
-    params.append("br");
-
-    document.getElementById("banner").appendChild($parent[0]);
+    $params.append($name).append($entry).append("<br/>");
+    $disp.append($params);
+    $wrap.append($disp);
+    $parent.append($wrap);
+    $("#banner").append($parent);
 
     // Define functions that construct the div elements, then call them.
     this.setupDivs = function() {
-
-//        document.getElementById("banner").appendChild($parent[0]);
-
-        // Let's start with the printer.
-        var p = document.createElement("input");
-        p.type = "button";
-        p.className = "floating";
-        p.value = "Print Config!";
-        p.onclick = function() {
-
-            var s = "";
-            // If object is an array, recursively call itself. Otherwise, print contents (assume String)
-            var recursive_printer = function(target) {
-                if (target.childNodes && target.childNodes.length > 0) { // defined and non-zero
-                    s += "[";
-                    for (var i = 0; i < target.childNodes.length; ++i) {
-                        recursive_printer(target.childNodes[i]);
-                    }
-                    s += "],";
-                } else if (target.value && (!target.type || target.type !== "button")) {
-                    s += "\"" + target.value + "\"" + ", ";
-                }
-            };
-
-            s = "var config = {\n";
-
-            console.log($parent[0]);
-
-            for(var i = 0; i < $parent[0].childNodes.length; ++i) {
-                var d = $parent[0].childNodes[i];
-                if (d.id) {
-                    s += "\"" + d.id + "\": ";
-                    recursive_printer(d);
-                    console.log(s); s = ""; // new-line...
-                }
-            };
-
-            s +=("};\n");
-            console.log(s);
-        };
-
-        $parent.append(p);
 
         var _Break = function(curr_div) {
             var b = document.createElement("div");
@@ -128,36 +79,28 @@ function GameLevel(game, config) {
 
         var mouse_down = false;
 
-        // We want this to execute press function AND click function
-        // , so we pass click function as a closure argument
-        var pressMouse = function(other_funct) {
-            return function() { mouse_down = !mouse_down; other_funct(); };
-        };
+
+        var square = function(element) {
+
+            $(element).mouseover(function() {
+                if(mouse_down) $(this).toggleClass("square_highlight");
+            });
+
+            // We want this to execute press function AND click function
+            $(element).mousedown(function() {
+                mouse_down = !mouse_down;
+                $(this).parent().toggleClass("squares_highlight");                
+                $(this).trigger("mouseover");
+            });
+        }
 
         var _Square = function(bg_color) {
             var d = document.createElement("div");
             d.className = "square";
             d.style.backgroundColor = bg_color;
 
-            d.onmouseover = (function(style, color1, color2) {
-                var is_c1 = true;
-                return function() {
-                    if (mouse_down === false) return;
-                    is_c1 = !is_c1;
-                    style.backgroundColor = (is_c1)? color1: color2;
-                };
-            } (d.style, bg_color, "#4455ff"));
-
-            d.onmousedown = (function(click_funct, div_style) {
-                // We want this to execute press function AND click function
-                // , so we pass click function as a closure argument
-                var the_color = div_style.color;
-                return function() {
-                    mouse_down = !mouse_down;
-                    div_style.color = (mouse_down)? "#123456": the_color;
-                    click_funct(); };
-            } (d.onmouseover, $parent[0].style));
             $parent.append(d);
+            square(d);
             return d;
         };
 
@@ -169,39 +112,33 @@ function GameLevel(game, config) {
         //   --initially hidden div--|
         //   ------------------------|
 
+        // Sets folder content up to be 'hidden' by default
+        var folder = function($container, $content) {
+
+            $container.addClass("floating");
+            $content.addClass("hidden");
+            $container.click(function() {
+                $content.toggleClass("hidden");
+            });
+
+        }
+
         var _openDiv = function(title, div_id) {
+
+            var $brake = $("<div></div>", { class: 'brake' });
+
+            var b = document.createElement("input");
+            b.type = "button";
+            b.value = title;
 
             var d = document.createElement("div");
             if (div_id) d.id = div_id;
 
-            var b = document.createElement("input");
-            b.type = "button";
-            b.className = "floating";
-            b.value = title;
-
-            // Returns a function that toggles it on / off
-            // Also sets it up to be 'none' by default
-            b.onclick = (function(s) {
-                s.display = "none";
-                return function() {
-                    if(s.display === "none") s.display = "inline-block";
-                    else s.display = "none";
-                };
-            } (d.style));
-
-            var brake = document.createElement("div");
-            brake.style.borderBottomStyle = "solid";
-            brake.style.borderBottomWidth = "2px";
-            brake.style.borderTopStyle = "solid";
-            brake.style.borderTopWidth = "2px";
-            brake.style.height = "1px";
-            brake.style.width = "95%";
-            brake.style.borderBottomColor = "#662211";
-            brake.style.backgroundColor = "#33110a";
-            brake.style.borderTopColor = "#130a08";
-            $parent.append(brake);
+            $parent.append($brake);
             $parent.append(b);
             $parent.append(d);
+
+            folder($(b), $(d));
 
             $parent = $(d);
 
@@ -270,6 +207,8 @@ function GameLevel(game, config) {
 
             c.style.color = "#ff2200";
             var d = _openDiv("Coordinates");
+
+            // Index coordinates into a structure
 
             var coords = p[4];
 
