@@ -10,10 +10,19 @@
 
   <div class="brake"></div>
   <input type="button" class="floating" value="Piece '{% raw p["name"] %}':"/>
-    <div class="display" style="font-size: 9pt; color: rgb(255, 0, 0);">
-      Texture: <textarea rows="1">{% raw p["texture"] %}</textarea>
-       , Width: <textarea rows="1" style="width: 20px;">{% raw p["width"] %}</textarea>
-      , height: <textarea rows="1" style="width: 20px;">{% raw p["height"] %}</textarea>
+    <div class="display">
+      <div style="float: left; position: relative;">
+        <textarea rows="1">{% raw p["texture"] %}</textarea>
+        <div class="text_label">Texture</div> 
+      </div>
+      <div style="float: left; position: relative;">
+        <textarea rows="1" style="width: 70px;">{% raw p["width"] %}</textarea>
+        <div class="text_label">Width</div> 
+      </div>
+      <div style="float: left; position: relative;">
+       <textarea rows="1" style="width: 70px;">{% raw p["height"] %}</textarea>
+        <div class="text_label">Height</div> 
+      </div>
 
       <input type="button" class="floating" value="Coordinates →"/>
       <div style="display:none;">
@@ -44,34 +53,37 @@
   {% end %}
     <div class="brake"></div>
     <input type="button" class="floating" value="Music:"/>
-    <div class="display" style="font-size: 9pt; color: rgb(255, 0, 0);">
+    <div class="display">
 
   {% for a in config.audio %}
       <div style="float: left; position: relative;">
-        <textarea rows="1" cols="22">{% raw a[0] %}</textarea>
-        <div style="position: absolute; top: 2px; right: 5px;">Path</div>
+        <textarea rows="1" cols="20">{% raw a[0] %}</textarea>
+        <div class="text_label">Path</div>
       </div>
 
       <div style="float: left; position: relative;">
-      <textarea rows="1" cols="22">{% raw a[1] %}</textarea>
-        <div style="position: absolute; top: 2px; right: 5px;">Output Filter</div>
+      <textarea rows="1" cols="23">{% raw a[1] %}</textarea>
+        <div class="text_label">Output Filter</div>
       </div>
     <br/>
-    {% if 2 in a %}
-      , Loop Entry Bar <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
-    <br/>
-       and Measure Leng<textarea rows="1" style="width: 30px; height: 17px;"></textarea>
-    <br/>
+    {% if len(a) > 4 %}
+      <div style="float: left; margin-left: 20px; position: relative;">
+        <textarea rows="1" cols="14">{% raw a[3] %}</textarea>
+        <div class="text_label">Entry Bar</div>
+      </div>
+      <div style="float: left; position: relative;">
+        <textarea rows="1" cols="14">{% raw a[4] %}</textarea>
+        <div class="text_label">Measure Length</div>
+      </div>
     {% end %}
+    <br style="clear:both;"/>
   {% end %}
     </div>
     <div class="brake"></div>
     <input type="button" class="floating" value="Textures:"/>
-    <div id="textures" class="hidden">
-      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
-      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
-      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
-    </div>
+  {% for t in config.textures %}
+    <textarea rows="1" cols="14">{% raw t %}</textarea>
+  {% end %}
     <div class="brake"></div>
     <input type="button" class="floating" value="Misc"/>
     <div id="start-position" class="hidden">

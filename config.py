@@ -43,6 +43,7 @@ class GameConfig():
 		self.squares = {}
 		self.pieces = []
 		self.audio = level["audio"]
+		self.textures = level["textures"]
 		self.start = level["start-position"]
 
 		# Either op doesn't exist (val), is a '-' (= dec old), or is  a '+' (= inc old)
