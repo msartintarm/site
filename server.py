@@ -27,8 +27,11 @@ class TarmSocket(websocket.WebSocketHandler):
 
 	def on_message(self, message):
 		print("Message from browser:", message)
-		self.write_message(template.Loader('html').load('config.html').generate(config=level_1))
+		if "load-config" in message:
+			self.write_message(template.Loader('html').load('config.html').generate(config=level_1))
 
+		elif "load-about" in message:
+			self.write_message(template.Loader('html').load('about.html').generate())
 
 #    {% module Template('config.html', config=config) %}
 

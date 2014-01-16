@@ -15,13 +15,21 @@ function GameSocket() {
     this.socket.onmessage = function(e) {
 
         // Convert to DOM structure, and then use DOM manipulation.
-        var $result = $("<div></div>");
-        $result.html(e.data);
+        var $result = $("<div></div>").html(e.data);
         if ($result) {
             // Look for replacement element
             var new_element = $result.find(".html-replace");
-            var replacement = new_element.attr("data-id");
-            if (replacement) $("#" + replacement).html(new_element);
+            var replacement = new_element.attr("data-target");
+            if (replacement) {
+                var $container = $("#" + replacement);
+                var replacer = $container.attr("data-close");
+                if (replacer) $("#" + replacer).show().mousedown(function(){
+                    $container.html("");
+                    $(this).hide();
+                });
+                $container.html(new_element);
+
+            }
         }
         else console.log("Message received: " + e.data);
     };
@@ -41,7 +49,7 @@ function GameSocket() {
         $(button).mousedown(function() {
             console.log("Sending message: " + $(this).data("cmd"));
             sock.send([uri, "/", $(this).data("cmd")].join(""));
-        })
+        });
     }
 
     return this;

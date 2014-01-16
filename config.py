@@ -85,7 +85,10 @@ class GameConfig():
         	# Use info to construct config object
 			self.pieces.append({
 				"name": piece[0],
-				"squares": squares.copy()
+				"texture": piece[1],
+				"squares": squares.copy(),
+				"width": piece[2],
+				"height": piece[3]
 			});
 
 		print(self.pieces)

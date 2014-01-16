@@ -34,7 +34,25 @@ iframe.shader {
 }
 
 .config-holder {
+
+    -webkit-transition: all 0.9s;  
+   -moz-transition: all 0.9s;  
+   -o-transition: all 0.9s;  
+   transition: all 0.9s;  
+    overflow: auto;
     width: 500px;
+    margin: auto;
+    background: rgb(70, 70, 70);
+    border: solid 2px rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    max-height: 400px;
+}
+
+.socket-button {
+    min-width: 20%;
+    max-width: 300px;
+    text-align: center;
     margin: auto;
     background: rgb(70, 70, 70);
     border: solid 2px rgb(255, 255, 255);
@@ -52,8 +70,6 @@ div#banner{
     text-align:center;
     padding-top:2%;
     color: #FF0000;
-    background: url(graphics/banner.gif) repeat-y;
-    background-size: 100%;
 
 }
 
@@ -84,9 +100,10 @@ div.wrap {
     height:100%;
     border: 10px inset #555555;
     margin-left: -10px;
+    background: url(graphics/banner.gif) repeat-y;
 }
 
-div#display {
+div.display {
     background: url('graphics/brushed_metal.jpg') repeat-y;
     padding-top:8px;
     width: 100%;
@@ -107,14 +124,10 @@ div#stadium_params {
 }
 
 #game_name {
-    float:left;
-    width: 45%;
     font-size: 16px;
 }
 
 input.game_input {
-    float: right;
-    width: 55%;
     font-family: Impact, fantasy;
     font-variant: small-caps;
 }

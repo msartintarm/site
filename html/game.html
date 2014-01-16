@@ -29,24 +29,25 @@
 
 
     <div id="footer">
-      <input type="button" value="(c) 2013 Batman and Robin" class="floating" />
+      <input type="button" value="(c) 2014 Tsunami Charles" class="floating" />
       <div class="title" id="title4" > </div>
     </div>
     <!-- Put this element one tag scope higher to hide it. -->
 
     <input class="floating2" id="shader_viewer" style="text-align:center;" type="button" value="View Shaders"/>
-    <div class="shaders" id="shader1" style="display:none;">
-      <iframe frameborder=0 class="shader" id="shader_default" src="{{ static_url("shaders/default.html") }}"></iframe>
-      <iframe frameborder=0 class="shader" id="shader_canvas" src="{{ static_url("shaders/canvas.html") }}"></iframe>
-      <iframe frameborder=0 class="shader" id="shader_player" src="{{ static_url("shaders/player.html") }}"></iframe>
-      <iframe frameborder=0 class="shader" id="shader_color" src="{{ static_url("shaders/color.html") }}"></iframe>
-      <iframe frameborder=0 class="shader" id="shader_frame" src="{{ static_url("shaders/frame.html") }}"></iframe>
-    </div>
+      {% include 'shaders.html' %}
 
-    <div id="config-load-button" class="socket-button config-holder" data-cmd="load-config">
-      Load Game Config!
+    <div id="config-load-button" class="socket-button" data-cmd="load-config">
+      Game Config
     </div>
-    <div id="config-container" class="config-holder"></div>
+    <div id="config-container" class="config-holder" data-close="close-config"></div>
+    <div class="socket-button" id="close-config" style="display: none;">↑</div>
+
+    <div id="about-load-button" class="socket-button" data-cmd="load-about">
+      About Author
+    </div>
+    <div id="about-container" class="config-holder" data-close="close-about"></div>
+    <div class="socket-button" id="close-about" style="display: none;">↑</div>
 
     <div id="fb-root"></div>
 <!--    <div class="fb-like" data-href="http://msartintarm.github.io/online_game/demo.html" data-width="450" data-show-faces="true" data-send="false" colorscheme="dark"></div>-->
