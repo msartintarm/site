@@ -45,6 +45,8 @@ class GameConfig():
 		self.audio = level["audio"]
 		self.textures = level["textures"]
 		self.start = level["start-position"]
+		self.grid_size = level["grid-size"]
+		self.start_position = level["start-position"]
 
 		# Either op doesn't exist (val), is a '-' (= dec old), or is  a '+' (= inc old)
 		def newCoordVal(old, op, val):
