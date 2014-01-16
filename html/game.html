@@ -5,10 +5,7 @@
   <head>
     <meta charset="UTF-8"/>
     <title>WebGL Demo</title>
-    <link rel="stylesheet" type="text/css" href="{{ static_url("styles.css") }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static_url("libs/jquery-ui.css") }}"/>
-    <link rel="icon" type="image/x-icon" href="{{ static_url("favicon.ico") }}"/>
-    {% include 'scripts.html' %}
+    {% include 'header.html' %}
   </head>
 
   <body onload="window.initGLcanvas();">
@@ -46,7 +43,9 @@
       <iframe frameborder=0 class="shader" id="shader_frame" src="{{ static_url("shaders/frame.html") }}"></iframe>
     </div>
 
+    <div class="config-holder">
     {% module Template('config.html', config=config) %}
+    </div>
 
     <div id="fb-root"></div>
 <!--    <div class="fb-like" data-href="http://msartintarm.github.io/online_game/demo.html" data-width="450" data-show-faces="true" data-send="false" colorscheme="dark"></div>-->

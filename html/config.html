@@ -1,0 +1,82 @@
+<div>
+  <div class="wrap">
+    <div id="display">
+      <span id="game_params">
+        <div id="game_name">Name:</div>
+        <div class="floating">
+          <input type='text' id='player_name' class='floating game_input' value='Noname'>
+        </div>
+        <br/>
+      </span>
+    </div>
+  </div>
+
+  {% for i, p in enumerate(config.pieces) %}
+
+  <div class="brake"></div>
+  <input type="button" class="floating" value="Piece '{% raw p["name"] %}':"/>
+    <div id="piece-{% raw i %}" style="font-size: 9pt; color: rgb(255, 34, 0);">
+      <textarea rows="1" style="width: 96%; height: 17px; display: none;"></textarea>
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+       Width:
+      <textarea rows="1" style="width: 20px; height: 17px;"></textarea>
+      , height:
+      <textarea rows="1" style="width: 20px; height: 17px;"></textarea>
+
+      <div class="brake"></div>
+      <input type="button" class="floating" value="Coordinates"/>
+      <div class="hidden">
+
+    {% for y in range (-10, 10) %}
+
+        <div style="clear: both;"></div>
+
+      {% if y in p["squares"] %}
+
+        {% for x in range (-8, 30) %}
+          {% if x in p["squares"][y] and p["squares"][y][x] == i %}
+        <div class="square" style="background-color: rgb(51, 51, 221);"></div>
+          {% else %}
+        <div class="square" style="background-color: rgb(255, 68, 51);"></div>
+          {% end %}
+        {% end %}
+
+      {% else %}
+        {% for x in range (-8, 30) %}
+        <div class="square" style="background-color: rgb(255, 68, 51);"></div>
+        {% end %}
+      {% end %}
+    {% end %}
+
+      </div>
+    </div>
+  {% end %}
+    <div class="brake"></div>
+    <input type="button" class="floating" value="Music:"/>
+    <div id="audio" class="hidden">
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 50px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 50px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+    </div>
+    <div class="brake"></div>
+    <input type="button" class="floating" value="Textures:"/>
+    <div id="textures" class="hidden">
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 96%; height: 17px;"></textarea>
+    </div>
+    <div class="brake"></div>
+    <input type="button" class="floating" value="Misc"/>
+    <div id="start-position" class="hidden">
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+      <textarea rows="1" style="width: 30px; height: 17px;"></textarea>
+    </div>
+  </div>
+</div>

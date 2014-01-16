@@ -33,6 +33,15 @@ iframe.shader {
     height:200px;
 }
 
+.config-holder {
+    width:90%;
+    margin: auto;
+    background: rgb(70, 70, 70);
+    border: solid 2px rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+}
+
 div#banner{
     width:25%;
     float:left;

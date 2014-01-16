@@ -39,8 +39,6 @@ function Game(gl_) {
         "start-position": ["0", "300", "750"]
     });
 
-    level0.setupDivs();
-
     // Used in collision detection.
     var WALL_NONE = 0;
     var WALL_N = 1;
@@ -111,22 +109,6 @@ function Game(gl_) {
 	this.floor.forEach(function(flo) { flo.initBuffers(gl_); });
 	this.push_button.forEach(function(but) { but.initBuffers(gl_); });
 	this.three_dee.forEach(function(cube) { cube.initBuffers(gl_); });
-    };
-
-    this.loadLevel = function() {
-
-        level0.setupDivs();
-
-        level0.initMisc(); // GRID_SIZE and viewing translation
-        this.floor = [];
-        level0.initPiece(this.floor, "piece-0");
-        this.floor_effect = 0;
-
-        this.push_button = [];
-        level0.initPiece(this.push_button, "piece-1");
-        this.three_dee = [];
-
-        level0.initAudio(audio);
     };
 
     this.draw = function(gl_) {
