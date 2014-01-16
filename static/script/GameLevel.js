@@ -2,7 +2,6 @@
  * Three intended purposes:
  * 1. Given a config for a level, load it into control panel
  * 2. Given a control-panel config, init game with it
- * 3. Do '1' and '2' with text (file) input
  */
 function GameLevel(game, config) {
 

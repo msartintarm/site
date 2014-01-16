@@ -12,9 +12,6 @@ function GLcanvas() {
     this.gl = null;
     this.canvas = null;
 
-    // if we have errors, don't keep trying to draw the scene
-    this.has_errors = false;
-
     this.resizeCounter = 0;
 
     $("#shader_viewer").click(function() {
@@ -28,43 +25,9 @@ function GLcanvas() {
 
         // TODO: use closure instead! (Not binding)
         var createScene = function(objToDraw) {
-
-            if(objToDraw == "cylinder") {
-	        this.objects.push(new Cylinder(1, 4, 5, 8, 3));
-            } else if(objToDraw == "sphere") {
-	        this.objects.push(new Sphere(2));
-            } else if(objToDraw == "skybox") {
-	        this.objects.push(new Skybox());
-            } else if(objToDraw == "stool") {
-	        this.objects.push(new Stool());
-            } else if(objToDraw == "jumbotron") {
-	        this.objects.push(new Jumbotron());
-	        this.objects.push(new Skybox());
-            } else if(objToDraw == "shadow") {
-	        this.objects.push(new MazePiece(5, NO_LEFT, TILE_TEXTURE));
-	        this.objects.push(new Stool());
-            } else if(objToDraw == "game") {
-	        this.objects.push(new Game(this.gl));
-            } else if(objToDraw == "text") {
-	        this.string1 = new GLstring("testing 1.", TEXT_TEXTURE);
-	        this.string2 = new GLstring("testing 2.", TEXT_TEXTURE2);
-	        this.objects.push(this.string1);
-	        this.objects.push(this.string2);
-	        this.objects.push(new Skybox());
-	        this.objects.push(new Quad(
-	            [ 1.5, 0.8,-4.0],
-	            [ 1.5,-0.8,-4.0],
-	            [-1.5, 0.8,-4.0],
-	            [-1.5,-0.8,-4.0]).setTexture(TEXT_TEXTURE).setShader(this.shader["canvas"]));
-	        this.objects.push(new Quad(
-	            [ 1.5, 2.4,-4.0],
-	            [ 1.5, 0.8,-4.0],
-	            [-1.5, 2.4,-4.0],
-	            [-1.5, 0.8,-4.0]).setTexture(TEXT_TEXTURE2).setShader(this.shader["player"]));
-
-            } else if(objToDraw == "torus") {
-	        this.objects.push(new Torus(0.2, 2));
-            }
+            if(objToDraw == "game") {
+	           this.objects.push(new Game(this.gl));
+            } 
         }.bind(this);
 
         var bufferModels = function() {

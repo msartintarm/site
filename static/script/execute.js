@@ -8,6 +8,10 @@
 var the_scene = ""; // global object that is monitored
 // cool font animation
 (function() {
+
+  var game_sock = new GameSocket();
+  game_sock.setupButton(".socket-button");
+
   var i_count = 0;
   var inputz;
   var new_color = parseInt("890abc", 16);
