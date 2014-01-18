@@ -12,6 +12,7 @@ var the_scene = ""; // global object that is monitored
   var game_sock = new GameSocket();
   game_sock.setupButton("#config-load-button");
   game_sock.setupButton("#about-load-button");
+  game_sock.setupButton("#audio-load-button");
 
   var i_count = 0;
   var inputz;

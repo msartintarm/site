@@ -15,38 +15,25 @@
       <div class='one_third'>Sartin-Tarm</div>
     </div>
 
-    <div class="wrap">
+    <div class="game_wrapper">
       
       {% include 'banner.html' %}
       {% include 'canvas.html' %}
+      {% include 'sidebar.html' %}
 
       <div id="land_down_under" style="clear:both;">
         <!-- It's bad code to not specify cols, but
              width in CSS lets browsers size it properly -->
-        <textarea class="keyboard" rows="1"></textarea>
       </div>
-    </div>
 
+    <!-- Put this element one tag scope higher to hide it. -->
+
+      {% include 'shaders.html' %}
 
     <div id="footer">
       <input type="button" value="(c) 2014 Tsunami Charles" class="floating" />
       <div class="title" id="title4" > </div>
     </div>
-    <!-- Put this element one tag scope higher to hide it. -->
-
-      {% include 'shaders.html' %}
-
-    <div id="config-load-button" class="socket-button" data-cmd="load-config">
-      Game Config
-    </div>
-    <div id="config-container" class="config-holder" data-close="close-config"></div>
-    <div class="socket-button" id="close-config" style="display: none;">↑</div>
-
-    <div id="about-load-button" class="socket-button" data-cmd="load-about">
-      About Author
-    </div>
-    <div id="about-container" class="config-holder" data-close="close-about"></div>
-    <div class="socket-button" id="close-about" style="display: none;">↑</div>
 
     <div id="fb-root"></div>
 <!--    <div class="fb-like" data-href="http://msartintarm.github.io/online_game/demo.html" data-width="450" data-show-faces="true" data-send="false" colorscheme="dark"></div>-->

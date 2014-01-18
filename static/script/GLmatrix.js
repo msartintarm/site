@@ -185,18 +185,6 @@ this.moveInToPlay = function() {
 this.toggleSpeed = function() {
     this.speedMode += 1;
     this.speedMode %= 3;
-    var keyboard = document.getElementById("keyboard");
-    switch (this.speedMode) {
-    case 1: // Slow speed
-	keyboard.innerHTML = "Speed mode: SLOW";
-	break;
-    case 2: // Fast speed
-	keyboard.innerHTML = "Speed mode: FAST";
-	break;
-    default:  // Normal speed
-	keyboard.innerHTML = "Speed mode: NORMAL";
-	break;
-    }
 };
 
 var moveCount = 0;

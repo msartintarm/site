@@ -40,10 +40,13 @@ iframe.shader {
    -o-transition: all 0.9s;  
    transition: all 0.9s;  
     overflow: auto;
-    width: 500px;
+    min-width: 20%;
+    max-width: 290px;
     margin: auto;
     background: rgb(70, 70, 70);
-    border: solid 2px rgb(255, 255, 255);
+    border: solid 2px rgb(175, 175, 175);
+    border-top: none;
+    border-bottom: none;
     color: rgb(255, 255, 255);
     border-radius: 6px;
     max-height: 400px;
@@ -70,7 +73,7 @@ div#banner{
     text-align:center;
     padding-top:2%;
     color: #FF0000;
-
+    height:300px;
 }
 
 div#header, div#footer {
@@ -94,7 +97,8 @@ div#header {
     padding-right:2px;
 }
 
-div.wrap {
+div.game_wrapper {
+    position: relative;
     background-color: #23180d;
     width:100%;
     height:100%;
@@ -197,9 +201,11 @@ canvas#glcanvas {
 
 canvas#textureCanvas { float:left;display:none; }
 
-div.main {
-    float:right;
-    width:75%;
+#canvas_holder {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    min-height: 300px;
     text-align: justify;
     background-color: #112233;
     font-size: 23px;
@@ -207,7 +213,17 @@ div.main {
     color: #5588dd;
 }
 
-table#button_table {
+.floating_button {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 150px;
+    height: 150px;
+    border-radius: 6px;
+}
+
+#button_table {
+    text-align: center;
     width:100%;
     background-color: #88aabb;
     border: 10px inset #666666;
@@ -258,6 +274,26 @@ div.one_third{
     -khtml-user-select: none;
 }
 
+.html-replace {
+     padding: 17px 20px 10px 20px;
+     position: relative;
+}
+
+.html-replace:h2 {
+    position: absolute;
+    left: 2px;
+    top: -14px;
+}
+ 
+ .html-replacestyle="background: rgba(0, 0, 0, 0.6);"
+
+.html-replace a:link { text-decoration: none; color: rgb(125, 125, 255); }
+.html-replace a:visited {color: rgb(200, 0, 0); }
+.html-replace a:active {color: rgb(255, 90, 90); }
+.html-replace a:hover {text-decoration: underline; color: rgb(255, 255, 0); }
+
+}
+
 .brake {
     height: 1px;
     width: 95%;
@@ -284,10 +320,3 @@ textarea.shader:hover {
     height:500px;
 }
 
-textarea.keyboard {
-    position:absolute; bottom: 8px; left:0px;
-    width:100%;
-    margin: 0px -4px;
-    background-color:#aaaaaa;
-    border-style:none;
-}

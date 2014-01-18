@@ -18,6 +18,14 @@ function GLcanvas() {
         GLshader.view(this, $("#shader1")[0]);
     });
 
+    this.fullscreen = function() {
+        // One-time display methods
+        $("#header").hide();
+        $("#footer").hide();
+        $("#shader1").hide();
+        $("#shader_viewer").hide();
+    };
+
     /**
      * Begins the canvas.
      */
@@ -39,12 +47,9 @@ function GLcanvas() {
 
         if (this.gl === null) {
 
-	    // One-time display methods
-	    $("#header").hide();
-	    $("#button_table").hide();
-	    $("#footer").hide();
-	    $("#shader1").hide();
-	    $("#shader_viewer").hide();
+        $("#button_table").hide();
+
+//        this.fullscreen();
 
 	    this.status = document.getElementById("glcanvas_status");
 	    this.canvas = document.getElementById("glcanvas");

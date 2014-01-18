@@ -33,6 +33,9 @@ class TarmSocket(websocket.WebSocketHandler):
 		elif "load-about" in message:
 			self.write_message(template.Loader('html').load('about.html').generate())
 
+		elif "load-audio" in message:
+			self.write_message(template.Loader('html').load('audio.html').generate(config=level_1))
+
 #    {% module Template('config.html', config=config) %}
 
 

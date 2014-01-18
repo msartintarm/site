@@ -24,8 +24,8 @@ function Jumbotron() {
     var stacks = 30;
 
     this.translateVec = [0,0,0];
-    this.total_balls = document.getElementById("stadium_balls").value;
-    this.balls_hit = document.getElementById("stadium_balls").value;
+    this.total_balls = 20;
+    this.balls_hit = 20;
     this.display = new GLstring("Balls left: " + this.total_balls, 
 				TEXT_TEXTURE3);
 
