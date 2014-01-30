@@ -37,8 +37,6 @@ function Game(gl_) {
 
     var s = true;
 
-    GLtexture.create(gl_, BRICK_NORMAL_TEXTURE);
-    GLtexture.create(gl_, HEAVEN_NORMAL_TEXTURE);
 
     var audio = new GLaudio();
     var player = new Player(gl_, 50);

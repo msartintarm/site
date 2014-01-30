@@ -26,15 +26,15 @@ function GameLevel(game, config) {
 
     this.initTextures = function() {
         config["textures"].forEach (function(texture) {
-            var t =
-                (texture === "brick-texture")? BRICK_TEXTURE:
-                (texture === "heaven-texture")? HEAVEN_TEXTURE:
-                (texture === "rug-texture")? RUG_TEXTURE: null;
-            var n =
-                (texture === "brick-texture")? BRICK_NORMAL_TEXTURE:
-                (texture === "heaven-texture")? HEAVEN_NORMAL_TEXTURE: null;
-            if (t) GLtexture.create(gl_, t);
-            if (n) GLtexture.create(gl_, n);
+            if (texture === "brick-texture") {
+                GLtexture.create(gl_, BRICK_TEXTURE, "brick.jpg");
+                GLtexture.create(gl_, BRICK_NORMAL_TEXTURE, "brick_normal.jpg");
+
+            }
+            else if (texture === "heaven-texture") {
+                GLtexture.create(gl_, HEAVEN_TEXTURE, "heaven.jpg");
+                GLtexture.create(gl_, HEAVEN_NORMAL_TEXTURE, "heaven_Normal.jpg");
+            }
         }, this);
     };
 

@@ -154,48 +154,18 @@ function GLobject() {
 	this.textureNum = theTexture;
 
 	switch(theTexture) {
-	case HELL_TEXTURE:
-	    //vec3.set(this.specular_color, 0.7, 0.2, 0.2);
-	    this.specular_coeff = 0.0;
-	    this.ambient_coeff = 0.0;
-	    this.diffuse_coeff = 1.0;
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
-	    break;
-	case FLOOR_TEXTURE:
-	    this.ambient_coeff = 0.2;
-	    this.diffuse_coeff = 0.4;
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
-	    break;
 	case BRICK_TEXTURE:
 	    this.ambient_coeff = 0.1;
 	    this.diffuse_coeff = 0.2;
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
-	    break;
-	case TILE_TEXTURE:
-	    this.ambient_coeff = 0.1;
-	    this.diffuse_coeff = 0.3;
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
+	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "brick_texture.jpg");
 	    break;
 	case RUG_TEXTURE:
 	    this.ambient_coeff = 0.9;
 	    this.specular_coeff = 1.0;
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
+	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "brick_texture.jpg");
 	    break;
-	case SKYBOX_TEXTURE_0:
-	case SKYBOX_TEXTURE_1:
-	case SKYBOX_TEXTURE_2:
-	case SKYBOX_TEXTURE_3:
-	case SKYBOX_TEXTURE_4:
-	case SKYBOX_TEXTURE_5:
-	case SKYBOX_TEXTURE_REAL:
-	    this.ambient_coeff = 2.4;
-	    this.diffuse_coeff = 0.0;
-	    vec3.set(this.specular_color, 0.0, 0.0, 0.0);
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
-	    break;
-	case WOOD_TEXTURE:
 	case HEAVEN_TEXTURE:
-	    var theTexture = new GLtexture(theCanvas.gl, this.textureNum);
+	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "heaven.jpg");
 	    break;
 	case TEXT_TEXTURE:
 	case TEXT_TEXTURE2:

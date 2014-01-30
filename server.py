@@ -3,21 +3,22 @@ from tornado import ioloop, httpserver, web, websocket, template
 from config import GameConfig
 
 OS = os.path.dirname(__file__)
-STATIC = os.path.join(OS, "static")
-AUDIO = os.path.join(OS, "audio")
-IMAGES = os.path.join(OS, "images")
-GAME = os.path.join(OS, "html/game.html")
-MISTAKE = os.path.join(OS, "html/error.html")
+
+def server_path(uri):
+	return os.path.join(OS, uri)
+
+def static_path(uri):
+	return { "path": server_path("static/" + uri) }
 
 level_1 = GameConfig()
 
 class TarmHandler(web.RequestHandler):
 
 	def get(self):
-		self.render(GAME, config = level_1)
+		self.render(server_path("html/game.html"), config = level_1)
 
 	def write_error(self, code, **kwargs):
-		self.render(MISTAKE)
+		self.render(server_path("html/error.html"))
 
 class TarmSocket(websocket.WebSocketHandler):
 
@@ -36,19 +37,16 @@ class TarmSocket(websocket.WebSocketHandler):
 		elif "load-audio" in message:
 			self.write_message(template.Loader('html').load('audio.html').generate(config=level_1))
 
-#    {% module Template('config.html', config=config) %}
-
-
-
 def start_server():
 
 	tarm_app = web.Application(handlers=[
 		(r"/", TarmHandler),
 		(r"/socket", TarmSocket),
-	    (r"/images/(.*)", web.StaticFileHandler, { "path": IMAGES }),
-	    (r"/music/(.*)", web.StaticFileHandler, { "path": AUDIO })
+	    (r"/images/(.*)", web.StaticFileHandler, static_path("images")),
+	    (r"/textures/(.*)", web.StaticFileHandler, static_path("textures")),
+	    (r"/music/(.*)", web.StaticFileHandler, static_path("audio"))
 	    ],
-	    debug=True, gzip=True, static_path=STATIC)
+	    debug=True, gzip=True, static_path=server_path("static"))
 
 	httpserver.HTTPServer(tarm_app).listen(8000)
 	print("Starting server.")
