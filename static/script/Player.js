@@ -33,11 +33,11 @@ function Player(gl_, grid_size) {
     this.movement_old = vec3.create();
 
     // Specify string to use, texture ID, and shader to use
-    var player_string = new GLstring(this.name, TEXT_TEXTURE, theCanvas.shader["player"]);
-    var left_string = new GLstring("left", TEXT_TEXTURE, theCanvas.shader["player"]);
-    var right_string = new GLstring("right", TEXT_TEXTURE, theCanvas.shader["player"]);
-    var jump_string = new GLstring("jump", TEXT_TEXTURE, theCanvas.shader["player"]);
-    var collision_string = new GLstring("Ouch!", TEXT_TEXTURE, theCanvas.shader["player"]);
+    var player_string = new GLstring(this.name, "text", theCanvas.shader["player"]);
+    var left_string = new GLstring("left", "text", theCanvas.shader["player"]);
+    var right_string = new GLstring("right", "text", theCanvas.shader["player"]);
+    var jump_string = new GLstring("jump", "text", theCanvas.shader["player"]);
+    var collision_string = new GLstring("Ouch!", "text", theCanvas.shader["player"]);
 
     this.jump_count = 0;
     this.left_count = 0;
@@ -76,7 +76,7 @@ function Player(gl_, grid_size) {
 		    [ w, 0, l],
 		    [-w, h, l],
 		    [-w, 0, l]);
-    this.o.setTexture(TEXT_TEXTURE);
+    this.o.setTexture("text");
     this.o.initTextures([1,0], [1,1], [0,0], [0,1]);
     this.o.shader = theCanvas.shader["player"];
     this.width = w;

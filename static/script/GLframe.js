@@ -8,7 +8,7 @@
  */
 function GLframe(texture_num) {
     this.num = texture_num;
-    theCanvas.gl.tex_enum[this.num] = -1;
+    theCanvas.gl.texNum[this.num] = -1;
     this.frameBuff = null;
     this.height = 400;
     lightPos[1] = this.height;
@@ -29,7 +29,7 @@ GLframe.prototype.init = function(gl_) {
     this.frameBuff.height = 512;
 
     this.active = (++(gl_.active));
-    gl_.tex_enum[this.num] = this.active;
+    gl_.texNum[this.num] = this.active;
 
     this.texture = gl_.createTexture();
 

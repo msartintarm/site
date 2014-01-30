@@ -24,17 +24,9 @@ function GameLevel(game, config) {
        }
     };
 
-    this.initTextures = function() {
-        config["textures"].forEach (function(texture) {
-            if (texture === "brick-texture") {
-                GLtexture.create(gl_, BRICK_TEXTURE, "brick.jpg");
-                GLtexture.create(gl_, BRICK_NORMAL_TEXTURE, "brick_normal.jpg");
-
-            }
-            else if (texture === "heaven-texture") {
-                GLtexture.create(gl_, HEAVEN_TEXTURE, "heaven.jpg");
-                GLtexture.create(gl_, HEAVEN_NORMAL_TEXTURE, "heaven_Normal.jpg");
-            }
+    this.initTextures = function(gl_) {
+        config["textures"].forEach (function(texture) { 
+            GLtexture.create(gl_, texture);
         }, this);
     };
 
@@ -56,17 +48,14 @@ function GameLevel(game, config) {
         };
     };
 
-    this.initAudio = function(gl_audio) {
+    this.initAudio = function() {
+        var gl_audio = new GLaudio();
         config["audio"].forEach (this.addAudio(gl_audio), this);
+        return gl_audio;
     };
 
     this.initPiece = function(arr, piece_name) {
         var p = config[piece_name];
-
-        var tex = p[1];
-            tex = (tex === "brick-texture")? BRICK_TEXTURE:
-            (tex === "heaven-texture")? HEAVEN_TEXTURE:
-            (tex === "rug-texture")? RUG_TEXTURE: null;
 
         var w = this.grid * parseInt(p[2]); // actually, width / 2
         var h = this.grid * parseInt(p[3]);
@@ -80,7 +69,7 @@ function GameLevel(game, config) {
 			      [x2-w,  y2,l],
 			      [x2+w,y2+h,l],
 			      [x2+w,  y2,l])
-		     .setTexture(tex).add2DCoords());
+		     .setTexture(p[1]).add2DCoords());
         };
 
         var coords = p[4];

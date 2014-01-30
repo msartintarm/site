@@ -26,8 +26,7 @@ function Jumbotron() {
     this.translateVec = [0,0,0];
     this.total_balls = 20;
     this.balls_hit = 20;
-    this.display = new GLstring("Balls left: " + this.total_balls, 
-				TEXT_TEXTURE3);
+    this.display = new GLstring("Balls left: " + this.total_balls, "text3");
 
     this.thickCylA = new ThickCyl(radiusA, widthA, heightA, slices, stacks);
     this.thickCylB = new ThickCyl(radiusB, widthB, heightB, slices, stacks);
@@ -36,8 +35,8 @@ function Jumbotron() {
     this.thickCylB.flip();
     this.thickCylA.rotatePos();
     this.thickCylB.rotatePos();
-    this.thickCylA.wrapTexture(TEXT_TEXTURE3, theCanvas.gl.shader_canvas);
-    this.thickCylB.wrapTexture(TEXT_TEXTURE3, theCanvas.gl.shader_canvas);
+    this.thickCylA.wrapTexture("text3", theCanvas.gl.shader_canvas);
+    this.thickCylB.wrapTexture("text3", theCanvas.gl.shader_canvas);
 
     // RectangularPrism: a, b, c, d, width
     // The Jumbotrons's screen's corners are symmetrical to the center of the plane,
@@ -72,10 +71,9 @@ function Jumbotron() {
     b[1] = distScreen - heightScreen;
     c[1] = distScreen - heightScreen;
 
-    this.frame = new GLframe(FRAME_BUFF);
+    this.frame = new GLframe("frame");
     this.jumboScreen = new SixSidedPrism.rectangle(a, b, c, d, widthScreen);
-    this.jumboScreen.setSixTextures(FRAME_BUFF, FRAME_BUFF, FRAME_BUFF, 
-				    FRAME_BUFF, FRAME_BUFF, FRAME_BUFF);
+    this.jumboScreen.setSixTextures("frame", "frame", "frame", "frame", "frame", "frame");
     this.jumboScreen.flipTextures();
 //    this.jumboScreen.setShader(theCanvas.gl.shader_canvas);
     return this;

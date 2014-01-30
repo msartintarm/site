@@ -184,13 +184,14 @@ function GLcanvas() {
         this.gl.active = 0;
         // sets textures we have already loaded.
         // some of them don't have sources
-        this.gl.tex_enum = [];
-        this.gl.tex_enum[FRAME_BUFF] = -1;
-        this.gl.tex_enum[NO_TEXTURE] = -1;
-        this.gl.tex_enum[TEXT_TEXTURE] = -1;
-        this.gl.tex_enum[TEXT_TEXTURE2] = -1;
-        this.gl.tex_enum[TEXT_TEXTURE3] = -1;
-        this.gl.tex_enum[TEXT_TEXTURE4] = -1;
+        this.gl.texNum = {
+            "frame": -1,
+            "none": -1,
+            "text1": -1,
+            "text2": -1,
+            "text3": -1,
+            "text4": -1
+        };
 
         window.onresize = function() {
 	    theCanvas.resizeCounter = 30;

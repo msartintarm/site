@@ -10,7 +10,7 @@ function Game(gl_) {
 
         //            CONFIGURATION
         "grid-size": GRID_SIZE,
-        "textures": ["brick-texture", "heaven-texture", "rug-texture"],
+        "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
         "audio": [["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
                   ["music/move.wav", "audio-output"],
                   ["music/jump1.wav", "audio-output"],
@@ -18,8 +18,8 @@ function Game(gl_) {
                   ["music/jump3.wav", "audio-output"],
                   ["music/jump4.wav", "audio-output"],
                   ["music/background.wav", "audio-delay", "loop", "0", "8"]],
-        "piece-0": ["floor", "rug-texture", "1", "3", ["-11,-1", "20*(+1,+0)"]],
-        "piece-1": ["wall", "brick-texture", "1", "1", ["6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
+        "piece-0": ["floor", "rug.jpg", "1", "3", ["-11,-1", "20*(+1,+0)"]],
+        "piece-1": ["wall", "brick.jpg", "1", "1", ["6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
                                                         "+4,-2", "4*(+2,+0)",
                                                         "-4,+2", "4*(-2,+0)",
                                                         "+4,-2", "4*(+2,+0)",
@@ -37,13 +37,11 @@ function Game(gl_) {
 
     var s = true;
 
-
-    var audio = new GLaudio();
     var player = new Player(gl_, 50);
 
     var thah = [];
 
-    level0.initAudio(audio);
+    var audio = level0.initAudio();
 
     this.matrix = theCanvas.mat;
 
@@ -62,6 +60,7 @@ function Game(gl_) {
     // Jump distance is a vector of linear X values
     // When we increment y-pos by these array values, the effect is a parabolic jump
 
+    level0.initTextures(gl_);
     level0.initMisc(); // GRID_SIZE and viewing translation
 
     this.floor = [];
@@ -86,7 +85,7 @@ function Game(gl_) {
         [-wh,-wh, l2],
         [ wh, wh, l2],
         [ wh,-wh, l2])
-    .setTexture(HEAVEN_TEXTURE)
+    .setTexture("heaven.jpg")
 	.setShader(theCanvas.shader["canvas"]);
 
     this.initBuffers = function(gl_) {
@@ -121,7 +120,7 @@ function Game(gl_) {
 	gl_.uniform1f(unis["hi_hat_u"], this.hi_hat);
 	gl_.uniform1f(unis["wall_hit_u"], this.floor_effect);
 	gl_.uniform3fv(unis["lightPosU"], [200, 200, -400]);
-	gl_.uniform1i(unis["sampler1"], gl_.tex_enum[BRICK_NORMAL_TEXTURE]);
+	gl_.uniform1i(unis["sampler1"], gl_.texNum["brick_normal.jpg"]);
 
 	for(i = 0; i < this.floor.length; ++i){
 	    this.floor[i].draw(gl_);
@@ -142,7 +141,7 @@ function Game(gl_) {
 
 	shader = theCanvas.changeShader("canvas");
 	theMatrix.setVertexUniforms(shader);
-	gl_.uniform1i(shader.unis["sampler1"], gl_.tex_enum[HEAVEN_NORMAL_TEXTURE]);
+	gl_.uniform1i(shader.unis["sampler1"], gl_.texNum["heaven_Normal.jpg"]);
 
 	this.background.draw(gl_);
 	theMatrix.pop();

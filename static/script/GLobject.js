@@ -5,18 +5,13 @@
  */
 function GLobject() {
 
-    this.data = {};
     this.buff = {};
     this.shader = -1;
 
     // Data to load into buffers
-    this.data["norm"] = [];
-    this.data["pos"] = [];
-    this.data["col"] = [];
-    this.data["index"] = [];
-    this.data["tex"] =  [];
+    this.data = { "norm": [], "pos": [], "col": [], "index": [], "tex": [] };
 
-    this.textureNum = NO_TEXTURE;
+    this.textureNum = "none";
 
     // Quads use an index position counter
     this.indexPos = 0;
@@ -154,37 +149,37 @@ function GLobject() {
 	this.textureNum = theTexture;
 
 	switch(theTexture) {
-	case BRICK_TEXTURE:
+	case "brick.jpg":
 	    this.ambient_coeff = 0.1;
 	    this.diffuse_coeff = 0.2;
-	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "brick_texture.jpg");
+	    GLtexture.create(theCanvas.gl, theTexture);
 	    break;
-	case RUG_TEXTURE:
+	case "rug.jpg":
 	    this.ambient_coeff = 0.9;
 	    this.specular_coeff = 1.0;
-	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "brick_texture.jpg");
+	    GLtexture.create(theCanvas.gl, theTexture);
 	    break;
-	case HEAVEN_TEXTURE:
-	    var theTexture = new GLtexture(theCanvas.gl, theTexture, "heaven.jpg");
+	case "heaven.jpg":
+	    GLtexture.create(theCanvas.gl, theTexture);
 	    break;
-	case TEXT_TEXTURE:
-	case TEXT_TEXTURE2:
-	case TEXT_TEXTURE3:
-	case TEXT_TEXTURE4:
+	case "text":
+	case "text2":
+	case "text3":
+	case "text4":
 	    // For certain textures, we want _no_ position-dependent lighting.
 	    this.ambient_coeff = 5.0;
 	    this.diffuse_coeff = 0.0;
 	    vec3.set(this.specular_color, 0.0, 0.0, 0.0);
 	    //	this.specular_coeff = 1.0;
 	    break;
-	case FRAME_BUFF:
+	case "frame":
 	    this.ambient_coeff = 3.0;
 	    this.diffuse_coeff = 0.7;
 	    break;
-	case NO_TEXTURE:
+	case "none":
 	    break;
 	default:
-	    alert("Unsupported texture number " + theTexture + " in GLobject.js", theTexture);
+	    alert("Unsupported texture " + theTexture + " in GLobject.js", theTexture);
 	    break;
 	}
 	return this;
@@ -196,7 +191,7 @@ function GLobject() {
      */
     this.initBuffers = function(gl_) {
 
-	if(this.textureNum === NO_TEXTURE) {
+	if(this.textureNum === "none") {
 	    // See if we need to create 'dummy' data
 
 	    if(this.data["tex"].length < 1) {
@@ -330,7 +325,7 @@ function GLobject() {
 	    gl_.uniform1f(shader_.unis["diffuse_coeff_u"], this.diffuse_coeff);
 
 	// check to see if texture is used in shader
-	gl_.uniform1i(shader_.unis["sampler0"], gl_.tex_enum[this.textureNum]);
+	gl_.uniform1i(shader_.unis["sampler0"], gl_.texNum[this.textureNum]);
 
 	if(shader_.unis["specular_color_u"] !== null) {
 	    gl_.uniform3fv(shader_.unis["specular_color_u"], this.specular_color); }
@@ -386,7 +381,7 @@ function GLobject() {
 
 	var shader_;
 	if(this.shader !== -1) shader_ = this.shader;
-	else if(this.textureNum === NO_TEXTURE)
+	else if(this.textureNum === "none")
 	    shader_ = theCanvas.shader["color"];
 	else
 	    shader_ = theCanvas.shader["default"];

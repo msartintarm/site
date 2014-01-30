@@ -1,20 +1,20 @@
 var textures_loading = 0;
 
-function GLtexture(gl_, index_, image_name) {
+function GLtexture(gl_, name) {
 
-    if(typeof gl_.tex_enum[index_] != 'undefined') return;
-    gl_.tex_enum[index_] = -1;
+    if(typeof gl_.texNum[name] != 'undefined') return;
+    gl_.texNum[name] = -1;
     textures_loading ++;
 
     // REMOVED: Use base64 encoding to keep image client-side
     // NEW: Just fetch the picture and paste it to canvas.
     this.img = new Image();
-    this.img.src = "/textures/" + image_name;
+    this.img.src = "/textures/" + name;
 
     this.img.active = (++gl_.active);
 
     this.img.sampler = (++theCanvas.shader["default"].sampler);
-    gl_.tex_enum[index_] = this.img.active;
+    gl_.texNum[name] = this.img.active;
 
     this.img.onload = this.init.bind(this.img, gl_);
 
@@ -49,6 +49,6 @@ GLtexture.prototype.init = function(gl_) {
     }
 };
 
-GLtexture.create = function (gl_, num, name) {
-    var x = new GLtexture(gl_, num, name);
+GLtexture.create = function (gl_, name) {
+    var x = new GLtexture(gl_, name);
 }

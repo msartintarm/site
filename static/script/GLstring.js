@@ -3,15 +3,14 @@
    'theStr ing.texture_num' should be used externally to find
    the texture to set
  */
-function GLstring(text_to_write, string_num, shader_) {
+function GLstring(text_to_write, texture_name, shader_) {
     this.active = (++ theCanvas.gl.active);
-    this.num = string_num;
-    theCanvas.gl.tex_enum[this.num] = this.active;
+    this.tex = texture_name;
+    theCanvas.gl.texNum[this.tex] = this.active;
     this.shader = (shader_)? shader_: theCanvas.shader["default"];
     this.text = text_to_write;
     this.canvas = document.getElementById('textureCanvas');
     this.sampler = (++ this.shader.sampler);
-    this.texture = -1;
 
     var ctx = this.canvas.getContext("2d");
     if(!ctx) { alert("Error initializing text."); }
@@ -45,9 +44,8 @@ function GLstring(text_to_write, string_num, shader_) {
 
     var gl_ = theCanvas.gl;
 
-  if(this.texture === -1) this.texture = gl_.createTexture();
     gl_.activeTexture(gl_.TEXTURE0 + this.active);
-    gl_.bindTexture(gl_.TEXTURE_2D, this.texture);
+    gl_.bindTexture(gl_.TEXTURE_2D, gl_.createTexture());
 
     gl_.texParameteri(gl_.TEXTURE_2D,
 			  gl_.TEXTURE_WRAP_S,
@@ -71,7 +69,7 @@ GLstring.prototype.initBuffers = function(gl_) {
     var gl_sampler = gl_.getUniformLocation(
 	this.shader, "sampler0");
     gl_.uniform1i(gl_sampler, this.active);
-    gl_.tex_enum[this.num] = this.active;
+    gl_.texNum[this.tex] = this.active;
 };
 
 GLstring.prototype.draw = function(gl_) { return; };
