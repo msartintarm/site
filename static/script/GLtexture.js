@@ -9,50 +9,39 @@ function GLtexture(gl_, index_, image_name) {
     // REMOVED: Use base64 encoding to keep image client-side
     // NEW: Just fetch the picture and paste it to canvas.
     this.img = new Image();
-
     this.img.src = "/textures/" + image_name;
 
-    this.active = (++gl_.active);
+    this.img.active = (++gl_.active);
 
-    this.sampler = (++theCanvas.shader["default"].sampler);
-    gl_.tex_enum[index_] = this.active;
+    this.img.sampler = (++theCanvas.shader["default"].sampler);
+    gl_.tex_enum[index_] = this.img.active;
 
-    this.img.onload = this.init.bind(this, gl_, index_);
+    this.img.onload = this.init.bind(this.img, gl_);
 
     this.img.onerror = function(){ alert("problem with texture " +
-					 index_ + " active: " + this.active); };
+					 index_ + " active: " + this.img.active); };
     return this;
 }
 
-GLtexture.prototype.init = function(gl_,
-				    index_,
-				    status) {
+// Square (or power of two), or irregular?
+GLtexture.squareTexture = function(gl_) {
+	gl_.texParameteri(gl_.TEXTURE_2D, gl_.TEXTURE_MAG_FILTER, gl_.LINEAR);
+	gl_.texParameteri(gl_.TEXTURE_2D, gl_.TEXTURE_MIN_FILTER, gl_.LINEAR_MIPMAP_NEAREST);
+}
+GLtexture.rectTexture = function(gl_) {
+	gl_.texParameteri(gl_.TEXTURE_2D, gl_.TEXTURE_WRAP_S, gl_.CLAMP_TO_EDGE);
+	gl_.texParameteri(gl_.TEXTURE_2D, gl_.TEXTURE_WRAP_T, gl_.CLAMP_TO_EDGE);
+}
 
-    var the_texture = gl_.createTexture();
+GLtexture.prototype.init = function(gl_) {
 
     gl_.activeTexture(gl_.TEXTURE0 + this.active);
-    gl_.bindTexture(gl_.TEXTURE_2D, the_texture);
-    gl_.texImage2D(gl_.TEXTURE_2D, 0,
-		   gl_.RGBA, gl_.RGBA,
-		   gl_.UNSIGNED_BYTE, this.img);
-    if(index_ !== SKYBOX_TEXTURE_REAL){
-	gl_.texParameteri(gl_.TEXTURE_2D,
-			  gl_.TEXTURE_MAG_FILTER,
-			  gl_.LINEAR);
-	gl_.texParameteri(gl_.TEXTURE_2D,
-			  gl_.TEXTURE_MIN_FILTER,
-			  gl_.LINEAR_MIPMAP_NEAREST);
-    } else{
-	gl_.texParameteri(gl_.TEXTURE_2D,
-			  gl_.TEXTURE_WRAP_S,
-			  gl_.CLAMP_TO_EDGE);
-	gl_.texParameteri(gl_.TEXTURE_2D,
-			  gl_.TEXTURE_WRAP_T,
-			  gl_.CLAMP_TO_EDGE);
-    }
+    gl_.bindTexture(gl_.TEXTURE_2D, gl_.createTexture());
+    gl_.texImage2D(gl_.TEXTURE_2D, 0, gl_.RGBA, gl_.RGBA, gl_.UNSIGNED_BYTE, this);
+	GLtexture.squareTexture(gl_);
     gl_.generateMipmap(gl_.TEXTURE_2D);
 
-    console.log("tex: [" + this.active + "," + this.sampler + "," + index_ + "]");
+    console.log("tex: [" + this.active + "," + this.sampler + "," + this.src + "]");
 
     if((--textures_loading) === 0) {
 	console.log("all textures loaded.");
@@ -60,19 +49,6 @@ GLtexture.prototype.init = function(gl_,
     }
 };
 
-/**
- * Extracts EXIF data describing the conditions under
- *  which this picture was taken.
- * Code borrowed from http://www.nihilogic.dk/labs/exif/exif.js,
- *  licensed under MPL 1.1
- * TODO
- */
-GLtexture.prototype.getData = function() {};
-
 GLtexture.create = function (gl_, num, name) {
     var x = new GLtexture(gl_, num, name);
-}
-
-GLtexture.fromImage = function (gl_, name) {
-
 }

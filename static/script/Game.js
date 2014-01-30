@@ -81,11 +81,12 @@ function Game(gl_) {
 
     var wh = 1200;
     var l2= -20;
-    this.background = new Quad([-wh, wh, l2],
-			       [-wh,-wh, l2],
-			       [ wh, wh, l2],
-			       [ wh,-wh, l2])
-	.setTexture(HEAVEN_TEXTURE)
+    this.background = new Quad(
+        [-wh, wh, l2],
+        [-wh,-wh, l2],
+        [ wh, wh, l2],
+        [ wh,-wh, l2])
+    .setTexture(HEAVEN_TEXTURE)
 	.setShader(theCanvas.shader["canvas"]);
 
     this.initBuffers = function(gl_) {

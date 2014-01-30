@@ -35,7 +35,7 @@ class TarmSocket(websocket.WebSocketHandler):
 			self.write_message(template.Loader('html').load('about.html').generate())
 
 		elif "load-audio" in message:
-			self.write_message(template.Loader('html').load('audio.html').generate(config=level_1))
+			self.write_message(template.Loader('html').load('audio.html').generate())
 
 def start_server():
 
