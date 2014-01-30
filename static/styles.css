@@ -33,6 +33,13 @@ iframe.shader {
     height:200px;
 }
 
+.game-options {
+    clear: both;
+    position: absolute;
+    bottom: 40px;
+    right: 30px;
+}
+
 .config-holder {
 
     -webkit-transition: all 0.9s;  
@@ -185,7 +192,7 @@ tbody:hover {
     background-color:#123456;
 }
 
-input.beginner:hover {text-decoration: underline; }
+.begin_game:hover {text-decoration: underline; }
 
 a:link {text-decoration: none;
 }

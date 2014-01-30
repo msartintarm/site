@@ -51,7 +51,6 @@ function GLcanvas() {
 
 //        this.fullscreen();
 
-	    this.status = document.getElementById("glcanvas_status");
 	    this.canvas = document.getElementById("glcanvas");
 	    $(this.canvas).show();
 
@@ -104,11 +103,13 @@ function GLcanvas() {
 
 	    this.shader_source = new GLshader;
 	    this.shader_count = 0;
-            this.shader = { "default": this.gl.createProgram(),
-	                    "frame": this.gl.createProgram(),
-	                    "color": this.gl.createProgram(),
-	                    "canvas": this.gl.createProgram(),
-	                    "player": this.gl.createProgram() };
+        this.shader = { 
+            "default": this.gl.createProgram(),
+            "frame": this.gl.createProgram(),
+            "color": this.gl.createProgram(),
+            "canvas": this.gl.createProgram(),
+            "player": this.gl.createProgram()
+        };
 
 	    if(this.initShaders(this.shader["default"], "default",  "default") !== 0 ||
 	       this.initShaders(this.shader["frame"],  "frame",    "default") !== 0 ||
@@ -116,11 +117,7 @@ function GLcanvas() {
 	       this.initShaders(this.shader["player"], "player",   "player") !== 0 ||
 	       this.initShaders(this.shader["color"],  "color",    "color") !== 0) {
 
-	        var theWindow = window.open(
-		    "GLerror_shader.php",
-		    "",
-		    "height=110,width=260,location=no,scrollbars=no");
-	        theWindow.focus();
+            console.error("Shaders failed to compile.");
 	        return;
 	    }
 
@@ -130,34 +127,25 @@ function GLcanvas() {
 	    theMatrix = new GLmatrix(this.gl);
 	    this.mat = theMatrix;
 
-            var compiled_text = document.createTextNode("Shaders compiled.");
-            var break1 = document.createElement("br");
-            var loading_2 = document.createTextNode(" textures.");
-            var break2 = break1.cloneNode(false); // shallow
-
 	    // Instantiate models
 	    createScene(theScene);
 
 	    this.gl.useProgram(this.shader["default"]);
 	    this.active_shader = this.shader["default"];
 
-	    this.status.appendChild(compiled_text);
-	    this.status.appendChild(break1);
+	    console.log("Shaders compiled.");
 
 	    // Get rid of unused JS  memory
 	    this.shader_source.cleanup();
 
 	    // Set up mouse control.
-	    this.canvas.onmousedown = handleMouseDown;
-	    document.onmouseup = handleMouseUp;
-	    this.canvas.onmousemove = handleMouseMove;
+	    $(this.canvas).mousedown(handleMouseDown);
+	    $(document).mouseup(handleMouseUp);
+	    $(this.canvas).mousemove(handleMouseMove);
 
 	    if(textures_loading !== 0) {
-                var loading_1 = document.createTextNode(textures_loading);
-	        this.status.appendChild(loading_1);
-	        this.status.appendChild(loading_2);
-	        this.status.appendChild(break2);
-            }
+            console.log("Textures left: " + textures_loading);
+        }
 	    bufferModels();
 
 	    // Needs calibration each time the HTML page changes. MST
