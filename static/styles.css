@@ -35,10 +35,21 @@ iframe.shader {
 
 .game-options {
     clear: both;
-    position: absolute;
+    position: fixed;
     bottom: 40px;
     right: 30px;
 }
+
+.texture-container {
+    float: left;
+    position: relative;
+}
+
+.texture-container img {
+    width:50%;
+}
+
+#config-json { display: none; }
 
 .config-holder {
 
@@ -119,6 +130,10 @@ div.display {
     padding-top:8px;
     width: 100%;
 }
+
+.config-piece { position: relative; }
+
+.config-piece img { width: 20px; height: 20px; }
 
 p#glcanvas_status {
     font-family: Tahoma, Geneva, sans-serif;

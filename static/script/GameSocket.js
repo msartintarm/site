@@ -12,7 +12,14 @@ function GameSocket() {
 
     // A message may be a request to append to. or to replace, an existing element.
     // Simple enough .. right?
+    // Sometimes, we want a specific callback function.
     this.socket.onmessage = function(e) {
+
+        if (this.callback_fn) {
+            this.callback_fn(e);
+            this.callback_fn = null;
+            return;
+        }
 
         // Convert to DOM structure, and then use DOM manipulation.
         var $result = $("<div></div>").html(e.data);
@@ -31,7 +38,6 @@ function GameSocket() {
 
             }
         }
-        else console.log("Message received: " + e.data);
     };
 
     this.socket.onclose = function() {
@@ -40,6 +46,7 @@ function GameSocket() {
 
     this.send = function(message, callback) {
 
+        if (callback) this.callback_fn = callback;
         this.socket.send(message);
     }
 

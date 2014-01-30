@@ -49,7 +49,7 @@ function GLcanvas() {
 
         $("#button_table").hide();
 
-//        this.fullscreen();
+        this.fullscreen();
 
 	    this.canvas = document.getElementById("glcanvas");
 	    $(this.canvas).show();

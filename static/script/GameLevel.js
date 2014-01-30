@@ -3,7 +3,9 @@
  * 1. Given a config for a level, load it into control panel
  * 2. Given a control-panel config, init game with it
  */
-function GameLevel(game, config) {
+function GameLevel(config) {
+
+    this.pieces = [];
 
     // Either op doesn't exist (val, is a '-' (= dec old), or is  a '+' (= inc old)
     var newCoordVal = function(old, op, val) {
@@ -12,16 +14,18 @@ function GameLevel(game, config) {
             (op === "+")? old + parseInt(val): -1;
     };
 
-    this.initMisc = function() {
+    this.getGrid = function() { return this.grid; };
+    this.getStartPos = function() { 
+        var vecz = [];
+        config["start-position"].forEach(function(x, i) {
+            vecz[i] = parseInt(x);
+        });
+        return vecz;
+    };
+
+    this.initGrid = function() {
         if (config["grid-size"]) this.grid = config["grid-size"];
         else console.error("No grid size specified!");
-        if (config["start-position"]) {
-            var vecz = [];
-            config["start-position"].forEach(function(x, i) {
-                vecz[i] = parseInt(x);
-            }, this);
-            game.matrix.vTranslate(vecz);
-       }
     };
 
     this.initTextures = function(gl_) {
@@ -30,8 +34,11 @@ function GameLevel(game, config) {
         }, this);
     };
 
-    this.addAudio = function(gl_audio) {
-        return function(sound) {
+    this.initAudio = function() {
+
+        var gl_audio = new GLaudio();
+
+        var addAudio = function(sound) {
             var web_node =
                 (sound[1] === "audio-low-pass")? gl_audio.low_pass:
                 (sound[1] === "audio-output")? gl_audio.web_audio.destination:
@@ -45,31 +52,29 @@ function GameLevel(game, config) {
                 gl_audio.createAudio(sound[0], web_node, true,
                                      parseInt(sound[3]),  // Loop start beat
                                      parseInt(sound[4])); // Loop  repeat factor
-        };
-    };
-
-    this.initAudio = function() {
-        var gl_audio = new GLaudio();
-        config["audio"].forEach (this.addAudio(gl_audio), this);
+        }
+        config["audio"].forEach(addAudio);
         return gl_audio;
     };
 
-    this.initPiece = function(arr, piece_name) {
-        var p = config[piece_name];
+    this.initPiece = function(p) {
+
+        var piece = [];
 
         var w = this.grid * parseInt(p[2]); // actually, width / 2
         var h = this.grid * parseInt(p[3]);
 
         var create = function(x,y) {
 
-	    var x2 = x * w * 2;
-	    var y2 = y * h;
-            var l = -1;
-	    arr.push(new Quad([x2-w,y2+h,l],
-			      [x2-w,  y2,l],
-			      [x2+w,y2+h,l],
-			      [x2+w,  y2,l])
-		     .setTexture(p[1]).add2DCoords());
+    	    var x2 = x * w * 2;
+    	    var y2 = y * h;
+                var l = -1;
+    	    piece.push(new Quad(
+                [x2-w,y2+h,l],
+		        [x2-w,  y2,l],
+                [x2+w,y2+h,l],
+                [x2+w,  y2,l])
+            .setTexture(p[1]).add2DCoords());
         };
 
         var coords = p[4];
@@ -91,5 +96,14 @@ function GameLevel(game, config) {
             }
 
         }
+        this.pieces.push(piece);
     };
+
+    this.initPieces = function() {
+        config["pieces"].forEach(function(piece) {
+            this.initPiece(piece);
+        }, this);
+    };
+
+    this.getPiece = function(index) { return this.pieces[index]; };
 }

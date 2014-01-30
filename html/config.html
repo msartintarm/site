@@ -1,5 +1,6 @@
 
 <div class="html-replace" data-target="config-container">
+
   <div class="display" id="game_name">
     <span>Name:</span>
     <input type='text' class='game_input' value='Noname'>
@@ -11,21 +12,22 @@
   <div class="brake"></div>
   <input type="button" class="floating" value="Piece '{% raw p["name"] %}':"/>
     <div class="display">
-      <div style="float: left; position: relative;">
-        <textarea rows="1">{% raw p["texture"] %}</textarea>
-        <div class="text_label">Texture</div> 
+      <div class="config-piece">
+        <img src="../textures/{% raw p["texture"] %}"/>
+        <div class="text_label piece-0">{% raw p["texture"] %}</div> 
       </div>
-      <div style="float: left; position: relative;">
-        <textarea rows="1" style="width: 70px;">{% raw p["width"] %}</textarea>
-        <div class="text_label">Width</div> 
-      </div>
-      <div style="float: left; position: relative;">
-       <textarea rows="1" style="width: 70px;">{% raw p["height"] %}</textarea>
-        <div class="text_label">Height</div> 
-      </div>
+      <div class="config-piece">
+        <span class="config-piece">
+          <textarea rows="1" class="piece-1" style="width: 70px;">{% raw p["width"] %}</textarea>
+          <div class="text_label">Width</div> 
+        </span><span class="config-piece">
+         <textarea rows="1" class="piece-2" style="width: 70px;">{% raw p["height"] %}</textarea>
+          <div class="text_label">Height</div> 
+        </span>
+        </div>
 
       <input type="button" class="floating" value="Coordinates →"/>
-      <div style="float: right;margin-right:20px;">
+      <div style="float: right; margin-right:20px;">
 
     {% for y in range (-10, 10) %}
 
@@ -57,27 +59,26 @@
     <div class="display">
 
   {% for count, a in enumerate(config.audio) %}
-      <div style="float: left; position: relative;">
-        {% if count == 0 %}<br/>{% end %}
+      <audio controls="controls">
+        <source src="{% raw a[0] %}"/>
+      </audio>
+      <div class="config-piece">
         <textarea rows="1" cols="20">{% raw a[0] %}</textarea>
       {% if count == 0 %}<div class="text_label">Path</div>{% end %}
       </div>
 
-      <div style="float: left; position: relative;">
-      {% if count == 0 %}<br/>{% end %}
+      <div class="config-piece">
         <textarea rows="1" cols="16">{% raw a[1] %}</textarea>
       {% if count == 0 %}<div class="text_label">Output Filter</div>{% end %}
      </div>
     <br/>
     {% if len(a) > 4 %}
-      <div style="float: left;  position: relative;">
-      {% if count == 0 %}<br/>{% end %}
-        <textarea rows="1" cols="9">{% raw a[3] %}</textarea>
+      <div class="config-piece">
+        <textarea rows="1" cols="3">{% raw a[3] %}</textarea>
       {% if count == 0 %}<div class="text_label">Entry Bar</div>{% end %}
       </div>
-      <div style="float: left; position: relative;">
-      {% if count == 0 %}<br/>{% end %}
-        <textarea rows="1" cols="14">{% raw a[4] %}</textarea>
+      <div class="config-piece">
+        <textarea rows="1" cols="3">{% raw a[4] %}</textarea>
       {% if count == 0 %}<div class="text_label">Measure Length</div>{% end %}
       </div>
     {% end %}
@@ -88,7 +89,10 @@
     <input type="button" class="floating" value="Textures:"/>
     <div class="display">
   {% for t in config.textures %}
-      <textarea rows="1" cols="14">{% raw t %}</textarea>
+      <div class="texture-container">
+        <img src="../textures/{% raw t %}"/>
+        <div class="text_label">{% raw t %}</div> 
+      </div>
   {% end %}
     </div>
     <div class="brake"></div>

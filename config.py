@@ -1,4 +1,4 @@
-import re
+import re, json
 
 # CONFIGURATION : Structure of audio
 # Origin URL, destination node, loop[, loop offset, loop time])
@@ -14,7 +14,7 @@ import re
  
 level = {
 	"grid-size": 50,
-	"textures": ["brick-texture", "heaven-texture", "rug-texture"],
+        "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
 	    "audio": [["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
 	              ["music/move.wav", "audio-output"],
 	              ["music/jump1.wav", "audio-output"],
@@ -23,8 +23,8 @@ level = {
 	              ["music/jump4.wav", "audio-output"],
 	              ["music/background.wav", "audio-delay", "loop", "0", "8"]],
 	    "pieces": [
-	    	["floor", "rug-texture", "1", "3", ["-11,-1", "20*(+1,+0)"]],
-	    	["wall", "brick-texture", "1", "1", [
+	    	["floor", "rug.jpg", "1", "3", ["-11,-1", "20*(+1,+0)"]],
+	    	["wall", "brick.jpg", "1", "1", [
 	        	"6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
 	            "+4,-2", "4*(+2,+0)",
 	            "-4,+2", "4*(-2,+0)",
@@ -96,5 +96,6 @@ class GameConfig():
 
 		print(self.pieces)
 
-
+	def toString(self):
+		return json.dumps(level)
 

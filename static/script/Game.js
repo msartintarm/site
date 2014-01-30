@@ -6,27 +6,14 @@ GRID_SIZE = 50;
 
 function Game(gl_) {
 
-    var level0 = new GameLevel(this, {
+    var level0 = new GameLevel(
+        $.parseJSON(
+            $("#config-json").val()));
 
-        //            CONFIGURATION
-        "grid-size": GRID_SIZE,
-        "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
-        "audio": [["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
-                  ["music/move.wav", "audio-output"],
-                  ["music/jump1.wav", "audio-output"],
-                  ["music/jump2.wav", "audio-output"],
-                  ["music/jump3.wav", "audio-output"],
-                  ["music/jump4.wav", "audio-output"],
-                  ["music/background.wav", "audio-delay", "loop", "0", "8"]],
-        "piece-0": ["floor", "rug.jpg", "1", "3", ["-11,-1", "20*(+1,+0)"]],
-        "piece-1": ["wall", "brick.jpg", "1", "1", ["6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
-                                                        "+4,-2", "4*(+2,+0)",
-                                                        "-4,+2", "4*(-2,+0)",
-                                                        "+4,-2", "4*(+2,+0)",
-                                                        "-4,+2", "4*(-2,+0)",
-                                                        "+2,-3", "20*(+1,+0)"]],
-        "start-position": ["0", "300", "750"]
-    });
+    var audio = level0.initAudio();
+    level0.initTextures(gl_);
+    level0.initGrid(); // GRID_SIZE
+    level0.initPieces();
 
     // Used in collision detection.
     var WALL_NONE = 0;
@@ -34,14 +21,6 @@ function Game(gl_) {
     var WALL_S = 2;
     var WALL_W = 3;
     var WALL_E = 4;
-
-    var s = true;
-
-    var player = new Player(gl_, 50);
-
-    var thah = [];
-
-    var audio = level0.initAudio();
 
     this.matrix = theCanvas.mat;
 
@@ -60,20 +39,18 @@ function Game(gl_) {
     // Jump distance is a vector of linear X values
     // When we increment y-pos by these array values, the effect is a parabolic jump
 
-    level0.initTextures(gl_);
-    level0.initMisc(); // GRID_SIZE and viewing translation
+    this.matrix.vTranslate(level0.getStartPos());
 
-    this.floor = [];
-    level0.initPiece(this.floor, "piece-0");
-    // new shader effect
-    this.floor_effect = 0;
 
-    this.push_button = [];
-    level0.initPiece(this.push_button, "piece-1");
+    this.floor = level0.getPiece(0);
+    this.floor_effect = 0;          // new shader effect
+
+    this.push_button = level0.getPiece(1);
     this.push_button[1].magical = true;
 
-    // Placeholder for 3d blocks -- MST
-    this.three_dee = [];
+    this.grid = level0.getGrid();
+
+    var player = new Player(gl_, this.grid);
 
     // Map uniforms ourself
     GLobject.draw_optimized = true;
@@ -95,7 +72,6 @@ function Game(gl_) {
 
 	this.floor.forEach(function(flo) { flo.initBuffers(gl_); });
 	this.push_button.forEach(function(but) { but.initBuffers(gl_); });
-	this.three_dee.forEach(function(cube) { cube.initBuffers(gl_); });
     };
 
     this.draw = function(gl_) {
@@ -130,10 +106,6 @@ function Game(gl_) {
 	    this.push_button[i].draw(gl_);
 	}
 
-	for(i = 0; i < this.three_dee.length; ++i){
-	    this.three_dee[i].draw(gl_);
-	}
-
 	player.draw(gl_, this.hi_hat);
 
 	theMatrix.push();
@@ -153,7 +125,7 @@ function Game(gl_) {
     this.startCameraLeftMove = function() {
 
 	if (this.cam_in_left_move === true || this.cam_in_right_move === true) return;
-	this.cam_movement[0] -= (15 * GRID_SIZE);
+	this.cam_movement[0] -= (15 * this.grid);
 	this.cam_left_count = 30;
 	this.cam_in_left_move = true;
     };
@@ -161,7 +133,7 @@ function Game(gl_) {
     this.startCameraRightMove = function() {
 
 	if (this.cam_in_right_move === true || this.cam_in_left_move === true) return;
-	this.cam_movement[0] += (15 * GRID_SIZE);
+	this.cam_movement[0] += (15 * this.grid);
 	this.cam_right_count = 30;
 	this.cam_in_right_move = true;
     };
@@ -178,11 +150,11 @@ function Game(gl_) {
 	// Handle camera natively as it doesn't need much logic.
 	if (this.cam_in_right_move === true) {
 	    if ((--this.cam_right_count) < 0) this.cam_in_right_move = false;
-	    else theMatrix.vTranslate([GRID_SIZE * 0.5, 0, 0]);
+	    else theMatrix.vTranslate([this.grid * 0.5, 0, 0]);
 	}
 	if (this.cam_in_left_move === true) {
 	    if ((--this.cam_left_count) < 0) this.cam_in_left_move = false;
-	    else theMatrix.vTranslate([-GRID_SIZE * 0.5, 0, 0]);
+	    else theMatrix.vTranslate([-this.grid * 0.5, 0, 0]);
 	}
 
 	player.updateMovement(this.hi_hat === 10, audio.playSound);
