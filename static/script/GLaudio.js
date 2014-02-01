@@ -81,23 +81,19 @@ function GLaudio() {
         };
     } (this.analyser, this.log_music));
 
-    // Close out function context to the world.
-    this.playSound = (function(web_audio, sounds) {
+    var sound_map = function(num) {
+        if (num == LEFT) return 1;
+        if (num == RIGHT) return 1;
+        if (num == UP)  return 1;
+    };
 
-        var sound_map = function(num) {
-            if (num == LEFT) return 1;
-            if (num == RIGHT) return 1;
-            if (num == UP)  return 1;
-        };
-
-	return function(num, length) {
-	    var source = web_audio.createBufferSource();
-	    source.buffer = sounds[sound_map(num)].buffer;
-	    source.connect(web_audio.destination);
+    this.playSound = function(num, length) {
+	    var source = this.web_audio.createBufferSource();
+	    source.buffer = this.audio[sound_map(num)].buffer;
+	    source.connect(this.web_audio.destination);
 	    if (!length) source.start(0, 0);
 	    else source.start(0, length);
-	};
-    } (this.web_audio, this.audio));
+	}.bind(this);
 
     /**
      * Makes an audio object, sets it up, and starts it.
@@ -108,18 +104,21 @@ function GLaudio() {
 
         var createAudioRequest = function(audio_url, audio_load_fn, auto_start) {
 
-	    var r = new XMLHttpRequest();
-	    r.open("GET", audio_url, true);
-	    r.responseType = "arraybuffer"; // Does this work for any MIME request?
+            function handleData(data) { console.log("success"); web.decodeAudioData(data, audio_load_fn); }
 
-	    // Once request has loaded, load and start audio buffer
-	    r.onload =  function() { web.decodeAudioData(r.response, audio_load_fn); };
-	    try { r.send();
-                  return true;
-                } catch (e) {
-                    console.log(e.toString());
-	            return false;
-                }
+    	    var r = new XMLHttpRequest();
+    	    r.open("GET", audio_url, true);
+    	    r.responseType = "arraybuffer"; // Does this work for any MIME request?
+
+    	    // Once request has loaded, load and start audio buffer
+    	    r.onload =  function() { web.decodeAudioData(r.response, audio_load_fn); };
+    	    try { 
+                r.send();
+                return true;
+            } catch (e) {
+                console.log(e.toString());
+                return false;
+            }
         };
 
         return function(url, destination, auto_start, loop_delay, loop_length) {

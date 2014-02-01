@@ -95,7 +95,7 @@ function Game(gl_) {
 	var unis = shader.unis;
 	gl_.uniform1f(unis["hi_hat_u"], this.hi_hat);
 	gl_.uniform1f(unis["wall_hit_u"], this.floor_effect);
-	gl_.uniform3fv(unis["lightPosU"], [200, 200, -400]);
+	gl_.uniform3fv(unis["lightPosU"], [2, 2, -40]);
 	gl_.uniform1i(unis["sampler1"], gl_.texNum["brick_normal.jpg"]);
 
 	for(i = 0; i < this.floor.length; ++i){
