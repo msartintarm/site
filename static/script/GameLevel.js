@@ -3,7 +3,9 @@
  * 1. Given a config for a level, load it into control panel
  * 2. Given a control-panel config, init game with it
  */
-function GameLevel(config) {
+function GameLevel(gl_, config_container) {
+
+    var config = $.parseJSON($(config_container).val());
 
     this.pieces = [];
 
@@ -23,15 +25,11 @@ function GameLevel(config) {
         return vecz;
     };
 
-    this.initGrid = function() {
-        if (config["grid-size"]) this.grid = config["grid-size"];
-        else console.error("No grid size specified!");
-    };
-
+    this.initGrid = function() { this.grid = config["grid-size"]; };
     this.initTextures = function(gl_) {
         config["textures"].forEach (function(texture) { 
             GLtexture.create(gl_, texture);
-        }, this);
+        });
     };
 
     this.initAudio = function() {

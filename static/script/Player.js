@@ -181,8 +181,6 @@ function Player(gl_, grid_size) {
 
     this.detectCollision = function(object) {
 
-	if(!!object.magical) { object.collided = WALL_NONE; return; }
-
 	// First, check vertical indexes. Next, check horizontal indexes.
 	if (this.movement[1] + this.height > object.y_min &&
 	    this.movement[1] <= object.y_max &&

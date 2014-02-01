@@ -6,9 +6,7 @@ GRID_SIZE = 50;
 
 function Game(gl_) {
 
-    var level0 = new GameLevel(
-        $.parseJSON(
-            $("#config-json").val()));
+    var level0 = new GameLevel(gl_, "#config-json");
 
     var audio = level0.initAudio();
     level0.initTextures(gl_);
@@ -41,12 +39,10 @@ function Game(gl_) {
 
     this.matrix.vTranslate(level0.getStartPos());
 
-
     this.floor = level0.getPiece(0);
     this.floor_effect = 0;          // new shader effect
 
     this.push_button = level0.getPiece(1);
-    this.push_button[1].magical = true;
 
     this.grid = level0.getGrid();
 
@@ -121,87 +117,76 @@ function Game(gl_) {
 
     };
 
+    this.camera = {
+      game: this,
+      in_left_move: false,
+      in_right_move: false,
+      movement: vec3.create(),
+      left_count: 0,
+      right_count: 0,
+      startLeftMove: function() {
+        if (this.in_left_move === true || this.in_right_move === true) return;
+        this.movement[0] -= (15 * this.game.grid);
+        this.left_count = 30;
+        this.in_left_move = true;
+      },
+      startRightMove: function() {
 
-    this.startCameraLeftMove = function() {
+        if (this.in_right_move === true || this.in_left_move === true) return;
+        this.movement[0] += (15 * this.game.grid);
+        this.right_count = 30;
+        this.in_right_move = true;
+      },
+      checkPosition: function(x_pos) {
+        if(x_pos < this.movement[0] - 400) this.startLeftMove();
+        else if(x_pos > this.movement[0] + 400) this.startRightMove();
 
-	if (this.cam_in_left_move === true || this.cam_in_right_move === true) return;
-	this.cam_movement[0] -= (15 * this.grid);
-	this.cam_left_count = 30;
-	this.cam_in_left_move = true;
+        if (this.in_right_move === true) {
+            if ((--this.right_count) < 0) this.in_right_move = false;
+            else this.game.matrix.vTranslate([this.game.grid * 0.5, 0, 0]);
+        }
+        if (this.in_left_move === true) {
+            if ((--this.left_count) < 0) this.in_left_move = false;
+            else this.game.matrix.vTranslate([-this.game.grid * 0.5, 0, 0]);
+        }
+      }
     };
 
-    this.startCameraRightMove = function() {
+    // Calls function exactly once; when the object is first collided with.
+    // Supposed to be called each tick.
+    function collision_check(object, fn) { 
+        var trigger = false;
+        return function() {
+            if (trigger == false && object.collided == WALL_N) { trigger = true; fn(); }
+        };
+    }
 
-	if (this.cam_in_right_move === true || this.cam_in_left_move === true) return;
-	this.cam_movement[0] += (15 * this.grid);
-	this.cam_right_count = 30;
-	this.cam_in_right_move = true;
-    };
+    var audio_check1 = collision_check(this.push_button[0], audio.triggerLoop.bind(audio, "music/trigger1.wav"));
+    var audio_check2 = collision_check(this.push_button[10], audio.triggerLoop.bind(audio, "music/trigger2.wav"));
+    var audio_check3 = collision_check(this.push_button[20], audio.triggerLoop.bind(audio, "music/trigger3.wav"));
 
-    var triggered1 = false;
-    var triggered2 = false;
-    var triggered3 = false;
     this.updateMovement = function() {
 
-	var x_ = player.xPos();
-	if(x_ < this.cam_movement[0] - 400) this.startCameraLeftMove();
-	else if(x_ > this.cam_movement[0] + 400) this.startCameraRightMove();
+    	this.camera.checkPosition(player.xPos());
 
-	// Handle camera natively as it doesn't need much logic.
-	if (this.cam_in_right_move === true) {
-	    if ((--this.cam_right_count) < 0) this.cam_in_right_move = false;
-	    else theMatrix.vTranslate([this.grid * 0.5, 0, 0]);
-	}
-	if (this.cam_in_left_move === true) {
-	    if ((--this.cam_left_count) < 0) this.cam_in_left_move = false;
-	    else theMatrix.vTranslate([-this.grid * 0.5, 0, 0]);
-	}
+    	player.updateMovement(this.hi_hat === 10, audio.playSound);
 
-	player.updateMovement(this.hi_hat === 10, audio.playSound);
+    	// Collision. How far should we go to be on grid?
+    	var i;
+    	var length1 = this.floor.length;
 
-	// Collision. How far should we go to be on grid?
-	var i;
-	var length1 = this.floor.length;
+    	for(i = length1 + this.push_button.length - 1; i >= 0; --i) {
 
-	for(i = length1 + this.push_button.length - 1; i >= 0; --i) {
+    	    var object = (i < length1)? this.floor[i]: this.push_button[i - length1];
+    	    player.detectCollision(object);
+    	}
 
-	    var object = (i < length1)? this.floor[i]: this.push_button[i - length1];
-	    player.detectCollision(object);
-	}
+    	player.movePostCollision();
 
-	player.movePostCollision();
+    audio_check1();
+    audio_check2();
+    audio_check3();
 
-	var checker1 = audio.triggerAudio("music/trigger1.wav", audio.delay, 16, (function(button) {
-                return function() { return (button.collided == WALL_N); };
-            } (this.push_button[0]))
-        );
-	var checker2 = audio.triggerAudio("music/trigger2.wav", audio.delay, 16, (function(button) {
-                return function() { return (button.collided == WALL_N); };
-            } (this.push_button[10]))
-        );
-	var checker3 = audio.triggerAudio("music/trigger3.wav", audio.delay, 16, (function(button) {
-                return function() { return (button.collided == WALL_N); };
-            } (this.push_button[20]))
-        );
-
-	if(triggered1 === false) {
-            if (checker1()) {
-                triggered1 = true;
-		this.push_button[1].magical = false;
-	        if (this.floor_effect !== 75) this.floor_effect ++;
-	        else console.log("Max Power!");
-            }
-        }
-	if(triggered2 === false) {
-            if (checker2()) {
-                triggered2 = true;
-            }
-        }
-	if(triggered3 === false) {
-            if (checker3()) {
-                triggered3 = true;
-            }
-        }
     };
 
     return this;

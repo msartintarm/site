@@ -95,33 +95,29 @@ function GLaudio() {
 	    else source.start(0, length);
 	}.bind(this);
 
+    function createAudioRequest(web, audio_url, audio_load_fn, auto_start) {
+
+        var r = new XMLHttpRequest();
+        r.open("GET", audio_url, true);
+        r.responseType = "arraybuffer";
+
+        // Once request has loaded, load and start audio buffer
+        r.onload =  function() { web.decodeAudioData(r.response, audio_load_fn); };
+        try { 
+            r.send();
+            return true;
+        } catch (e) {
+            console.log(e.toString());
+            return false;
+        }
+    };
+
     /**
      * Makes an audio object, sets it up, and starts it.
      * The following was used as a ref:
      * http://chromium.googlecode.com/svn/trunk/samples/audio/index.html
      */
-    this.createAudio = (function(web) {
-
-        var createAudioRequest = function(audio_url, audio_load_fn, auto_start) {
-
-            function handleData(data) { console.log("success"); web.decodeAudioData(data, audio_load_fn); }
-
-    	    var r = new XMLHttpRequest();
-    	    r.open("GET", audio_url, true);
-    	    r.responseType = "arraybuffer"; // Does this work for any MIME request?
-
-    	    // Once request has loaded, load and start audio buffer
-    	    r.onload =  function() { web.decodeAudioData(r.response, audio_load_fn); };
-    	    try { 
-                r.send();
-                return true;
-            } catch (e) {
-                console.log(e.toString());
-                return false;
-            }
-        };
-
-        return function(url, destination, auto_start, loop_delay, loop_length) {
+    this.createAudio = function(url, destination, auto_start, loop_delay, loop_length) {
 	    var new_audio = {
 	        dest: destination,
 	        auto_start: false,
@@ -131,36 +127,43 @@ function GLaudio() {
 	        source: new Array(NUM_LOOP_BUFFERS)
 	    };
 
-            var audio_load_f = function(the_buffer) {
-		new_audio.buffer = the_buffer;
-		new_audio.auto_start = auto_start;
-		if (auto_start === true) {
-		    console.log("new music set up to play. ");
-		} else {
-		    console.log("new music set up, not to play. ");
-		}
+        var audio_load_f = function(the_buffer) {
+    		new_audio.buffer = the_buffer;
+    		new_audio.auto_start = auto_start;
+    		if (auto_start === true) {
+    		    console.log("new music set up to play. ");
+    		} else {
+    		    console.log("new music set up, not to play. ");
+    		}
 	    };
 
-            if (createAudioRequest(url, audio_load_f, auto_start) === true)
-	        this.audio.push(new_audio);
+        if (createAudioRequest(this.web_audio, url, audio_load_f, auto_start) === true)
+        this.audio.push(new_audio);
 
-        };
-    } (this.web_audio));
+    };
 
     /**
      * Create audio that is triggered by a specific event.
      * Returns funct to play the audio..?
      */
-    this.triggerAudio = function (url, dest, length, condition_f) {
-        var whoami = this;
+    this.triggerAudio = function (uri, dest, length, condition_fn) {
+        var create_fn = this.createAudio.bind(this, uri, dest, true, 0, length);
         return function() {
-            if(condition_f() === true) {
-                whoami.createAudio(url, dest, true, 0, length);
+            if(condition_fn()) {
+                create_fn();
                 return true;
             }
             else return false;
         };
     };
+
+    /*
+     * Automatically begins a looped function. Great as the destination of a 
+     * triggered event
+     */
+    this.triggerLoop = function (uri) {
+        this.createAudio(uri, this.delay, true, 0, 16);
+    }
 
     /**
      * Create and start self-calling, closed function to play audio[] elements.
