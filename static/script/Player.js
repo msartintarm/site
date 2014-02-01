@@ -2,9 +2,11 @@
  * Creates and initializes a player. Very similar to quad.
  * Methods will be used by game.
  */
-function Player(gl_, grid_size) {
+function Player(gl_, game) {
 
-    var SHIFT=16;
+    this.game = game;
+ 
+   var SHIFT=16;
     var SPACE=32;
     var LEFT=37;
     var UP=38;
@@ -44,24 +46,19 @@ function Player(gl_, grid_size) {
     this.in_left_move = false;
     this.in_right_move = false;
 
-    var player_width = grid_size;
-    this.grid = grid_size;
-
     // Move distance is a group of numbers, normalized so their sum is 1.0
     this.move_dist = [];
     var move_total = 0;
     for (i = 0; i <= 8; ++i) {
-	var move_num = 64 - (i*i);
-	this.move_dist.push (move_num);
-	move_total += move_num;
+    	var move_num = 64 - (i*i);
+    	this.move_dist.push (move_num);
+    	move_total += move_num;
     }
-    for (i = 0; i <= 8; ++i) {
-	this.move_dist[i] /= move_total;
-    }
+    this.move_dist.forEach(function(a, b, c) { c[b] = a / move_total; });
 
     // x is width (from -w to w), y is height (from 0 to h), z is length (never varies over l)
-    var w = grid_size / 2;
-    var h = grid_size;
+    var w = game.grid / 2;
+    var h = game.grid;
     var l = -1;
 
     // Experimental. Add the underlying GLobject of the Quad directly to this.
@@ -78,18 +75,19 @@ function Player(gl_, grid_size) {
 
     this.initBuffers = function(gl_) { this.o.initBuffers(gl_); };
 
+    this.xPos = function() { return this.movement[0]; }
+    this.yPos = function() { return this.movement[1]; }
+
     this.draw = function(gl_, hi_hat) {
 
-    	theMatrix.push();
-    	theMatrix.translate(this.movement);
-
-    	var player_shader = this.o.shader;
+    	game.matrix.push();
+    	game.matrix.translate(this.movement);
     	var shader = theCanvas.changeShader("player");
     	gl_.uniform1f(shader.unis["hi_hat_u"], hi_hat);
     	theMatrix.setVertexUniforms(shader);
 
     	this.o.draw(gl_);
-    	theMatrix.pop();
+    	game.matrix.pop();
 
     };
 
@@ -141,99 +139,99 @@ function Player(gl_, grid_size) {
     }
 
     this.moveRight = function() {
-	if (this.right_started === false) return;
-	var count = ++this.right_count;
-	if (count >= this.move_dist.length) {
-	    this.endRightMove();
-	    return;
-	}
-	this.movement[0] += this.move_dist[count] * player_width * dist;
+    	if (this.right_started === false) return;
+    	if ((++this.right_count) >= this.move_dist.length) {
+    	    this.endRightMove();
+    	    return;
+    	}
+    	this.movement[0] += this.move_dist[this.right_count] * this.width * 2 * dist;
     };
 
     this.moveLeft = function () {
 
-	var count = (++this.left_count);
-	if (count >= this.move_dist.length) {
-	    this.endLeftMove();
-	    return;
-	}
-	this.movement[0] -= this.move_dist[count] * player_width * dist;
+    	if ((++this.left_count) >= this.move_dist.length) {
+    	    this.endLeftMove();
+    	    return;
+    	}
+    	this.movement[0] -= this.move_dist[this.left_count] * this.width * 2 * dist;
     };
 
     var on_wall = false;
 
     this.detectCollision = function(object) {
 
-	// First, check vertical indexes. Next, check horizontal indexes.
-	if (this.movement[1] + this.height > object.y_min &&
-	    this.movement[1] <= object.y_max &&
-	    this.movement[0] - this.width < object.x_max &&
-	    this.movement[0] + this.width > object.x_min) {
+    	// First, check vertical indexes. Next, check horizontal indexes.
+    	if (this.movement[1] + this.height > object.y_min &&
+    	    this.movement[1] <= object.y_max &&
+    	    this.movement[0] - this.width < object.x_max &&
+    	    this.movement[0] + this.width > object.x_min) {
 
-	    // Which side of the box did we cross during the previous frame?
-	    if (this.movement_old[1] >= object.y_max ||
-		this.movement[1] >= object.y_max) {
-		object.collided = WALL_N;
-		on_wall = true;
-		// Here, just move to the top of the wall.
-		if(this.jumping_down === true && this.in_jump === true) {
-		    this.movement[1] = object.y_max;
-		    this.in_jump = false;
-		    this.jumping_down = false;
-		}
-	    } else if (this.movement_old[1] + this.height < object.y_min) {
-		this.movement[1] = object.y_min - this.height;
-		object.collided = WALL_S;
-		this.jump_count = 0;
-		this.jumping_up = false;
-		this.jumping_down = true;
-	    } else if (this.movement_old[0] - this.width >= object.x_max) {
-		object.collided = WALL_E;
-		// Convert to 1.0 scale, round to integer, convert back
-		this.movement[0] = this.grid * Math.ceil(this.movement[0] / this.grid);
-		this.endLeftMove();
-	    } else if (this.movement_old[0] + this.width <= object.x_min) {
-		object.collided = WALL_W;
-		// Convert to 1.0 scale, round to integer, convert back
-		this.movement[0] = this.grid * Math.floor(this.movement[0] / this.grid);
-		this.endRightMove();
-	    } else console.log("Collision error..?");
-	} else {
-	    object.collided = WALL_NONE;
-	}
+  	    // Which side of the box did we cross during the previous frame?
+  	    if (this.movement_old[1] >= object.y_max ||
+      		this.movement[1] >= object.y_max) {
+      		object.collided = WALL_N;
+      		on_wall = true;
+      		// Here, just move to the top of the wall.
+      		if(this.jumping_down === true && this.in_jump === true) {
+      		    this.movement[1] = object.y_max;
+      		    this.in_jump = false;
+      		    this.jumping_down = false;
+      		}
+  	    } else if (this.movement_old[1] + this.height < object.y_min) {
+      		this.movement[1] = object.y_min - this.height;
+      		object.collided = WALL_S;
+      		this.jump_count = 0;
+      		this.jumping_up = false;
+      		this.jumping_down = true;
+  	    } else if (this.movement_old[0] - this.width >= object.x_max) {
+      		object.collided = WALL_E;
+      		// Convert to 1.0 scale, round to integer, convert back
+      		this.movement[0] = game.grid * Math.ceil(this.movement[0] / game.grid);
+      		this.endLeftMove();
+  	    } else if (this.movement_old[0] + this.width <= object.x_min) {
+      		object.collided = WALL_W;
+      		// Convert to 1.0 scale, round to integer, convert back
+      		this.movement[0] = game.grid * Math.floor(this.movement[0] / game.grid);
+      		this.endRightMove();
+  	    } else console.log("Collision error..?");
+    	} else {
+  	    object.collided = WALL_NONE;
+    	}
     };
 
     this.movePostCollision = function() {
-	if (on_wall === false && this.in_jump === false) {
-	    console.log("freefallin!");
-	    this.jump_count = 0;
-	    this.jumping_up = false;
-	    this.jumping_down = true;
-	    this.jump_started = false;
-	    this.in_jump = true;
-	}
-	on_wall = false;
+    	if (on_wall === false && this.in_jump === false) {
+    	    console.log("freefallin!");
+    	    this.jump_count = 0;
+    	    this.jumping_up = false;
+    	    this.jumping_down = true;
+    	    this.jump_started = false;
+    	    this.in_jump = true;
+    	}
+    	on_wall = false;
     };
 
-    this.xPos = function() { return this.movement[0]; }
-    this.yPos = function() { return this.movement[1]; }
+    // Preset audio method so we don't have to pass it each time.
+    this.setMoveMethod = function(method) {
+      this.move_method = method;
+    }
 
     // Called before draw.
-    this.updateMovement = function(on_beat, audio_method) {
+    this.updateMovement = function(on_beat) {
 
-	if(this.movement[1] < -500) { vec3.set(this.movement, 0,10,0); return; }
+    	if(this.movement[1] < -500) { vec3.set(this.movement, 0,10,0); return; }
 
-	vec3.copy(this.movement_old, this.movement);
+    	vec3.copy(this.movement_old, this.movement);
 
-	// Check whether it's time to initiate a move that's been triggered.
-	if (on_beat === true) {
-            if (this.in_right_move === true) {
-		this.right_started = true; audio_method(RIGHT); }
-            if (this.in_left_move === true && this.left_started === false) {
-		this.left_started = true; audio_method(LEFT); }
-	    if (this.in_jump === true && this.jump_started === false) {
-		this.jump_started = true; audio_method(UP, 0.25); }
-	}
+    	// Check whether it's time to initiate a move that's been triggered.
+    	if (on_beat === true) {
+        if (this.in_right_move === true) {
+      		this.right_started = true; this.move_method(RIGHT); }
+        if (this.in_left_move === true && this.left_started === false) {
+      		this.left_started = true; this.move_method(LEFT); }
+  	    if (this.in_jump === true && this.jump_started === false) {
+      		this.jump_started = true; this.move_method(UP, 0.25); }
+    	}
 
 	// We may be 'changing a move' due to collision constraints.
 	// Otherwise, all other moves are valid and there's no particular priority.

@@ -24,11 +24,6 @@ function Game(gl_) {
 
     // handles movement
     this.bg_movement = vec3.create();
-    this.cam_movement = vec3.create();
-    this.cam_left_count = 0;
-    this.cam_right_count = 0;
-    this.cam_in_left_move = false;
-    this.cam_in_right_move = false;
     this.in_change = false;
     this.change_x = [];
 
@@ -46,7 +41,7 @@ function Game(gl_) {
 
     this.grid = level0.getGrid();
 
-    var player = new Player(gl_, this.grid);
+    var player = new Player(gl_, this);
 
     // Map uniforms ourself
     GLobject.draw_optimized = true;
@@ -63,11 +58,11 @@ function Game(gl_) {
 
     this.initBuffers = function(gl_) {
 
-	player.initBuffers(gl_);
-	this.background.initBuffers(gl_);
+    	player.initBuffers(gl_);
+    	this.background.initBuffers(gl_);
 
-	this.floor.forEach(function(flo) { flo.initBuffers(gl_); });
-	this.push_button.forEach(function(but) { but.initBuffers(gl_); });
+    	this.floor.forEach(function(flo) { flo.initBuffers(gl_); });
+    	this.push_button.forEach(function(but) { but.initBuffers(gl_); });
     };
 
     this.draw = function(gl_) {
@@ -125,6 +120,7 @@ function Game(gl_) {
       left_count: 0,
       right_count: 0,
       startLeftMove: function() {
+
         if (this.in_left_move === true || this.in_right_move === true) return;
         this.movement[0] -= (15 * this.game.grid);
         this.left_count = 30;
@@ -165,11 +161,13 @@ function Game(gl_) {
     var audio_check2 = collision_check(this.push_button[10], audio.triggerLoop.bind(audio, "music/trigger2.wav"));
     var audio_check3 = collision_check(this.push_button[20], audio.triggerLoop.bind(audio, "music/trigger3.wav"));
 
+    player.setMoveMethod(audio.playSound);
+
     this.updateMovement = function() {
 
     	this.camera.checkPosition(player.xPos());
 
-    	player.updateMovement(this.hi_hat === 10, audio.playSound);
+    	player.updateMovement(this.hi_hat === 10);
 
     	// Collision. How far should we go to be on grid?
     	var i;
