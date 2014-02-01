@@ -27,17 +27,11 @@ function Player(gl_, grid_size) {
     var i; // for init loop
 
     // Setup player textures
-//    this.name = document.getElementById("player_name").value;
-    this.name = "Michael";
     this.movement = vec3.create();
     this.movement_old = vec3.create();
 
-    // Specify string to use, texture ID, and shader to use
-    var player_string = new GLstring(this.name, "text", theCanvas.shader["player"]);
-    var left_string = new GLstring("left", "text", theCanvas.shader["player"]);
-    var right_string = new GLstring("right", "text", theCanvas.shader["player"]);
-    var jump_string = new GLstring("jump", "text", theCanvas.shader["player"]);
-    var collision_string = new GLstring("Ouch!", "text", theCanvas.shader["player"]);
+    // Specify string to use, texture ID, and shader to use. Abandoned in favor of sprites
+//    var player_string = new GLstring(this.name, "text", theCanvas.shader["player"]);
 
     this.jump_count = 0;
     this.left_count = 0;
@@ -82,69 +76,58 @@ function Player(gl_, grid_size) {
     this.width = w;
     this.height = h;
 
-    this.initBuffers = (function(gl, shader) { return function() {
-
-	player_string.initBuffers(gl);
-	left_string.initBuffers(gl);
-	right_string.initBuffers(gl);
-	jump_string.initBuffers(gl);
-	collision_string.initBuffers(gl);
-	this.o.initBuffers(gl);
-    }; } (gl_, gl_.shader_player));
+    this.initBuffers = function(gl_) { this.o.initBuffers(gl_); };
 
     this.draw = function(gl_, hi_hat) {
 
-	theMatrix.push();
-	theMatrix.translate(this.movement);
+    	theMatrix.push();
+    	theMatrix.translate(this.movement);
 
-	var player_shader = this.o.shader;
-	var shader = theCanvas.changeShader("player");
-	gl_.uniform1f(shader.unis["hi_hat_u"], hi_hat);
-	theMatrix.setVertexUniforms(shader);
+    	var player_shader = this.o.shader;
+    	var shader = theCanvas.changeShader("player");
+    	gl_.uniform1f(shader.unis["hi_hat_u"], hi_hat);
+    	theMatrix.setVertexUniforms(shader);
 
-	this.o.draw(gl_);
-	theMatrix.pop();
+    	this.o.draw(gl_);
+    	theMatrix.pop();
 
     };
 
     this.startJump = function() {
 
-	if (this.in_jump === true) return;
-	jump_string.initBuffers(theCanvas.gl);
-	this.jump_started = false;
-	this.jumping_up = true;
-	this.jumping_down = false;
-	this.jump_count = 0;
-	this.in_jump = true;
+    	if (this.in_jump === true) return;
+    	this.jump_started = false;
+    	this.jumping_up = true;
+    	this.jumping_down = false;
+    	this.jump_count = 0;
+    	this.in_jump = true;
     };
 
     var dist;
 
     this.startLeftMove = function() {
 
-	dist = this.key_down[SHIFT]? 3:1;
-	if (this.in_left_move === true) return;
-	left_string.initBuffers(theCanvas.gl);
-	this.left_count = -1;
-	this.left_started = false;
-	this.in_left_move = true;
-	if(this.in_right_move === true && this.right_started === false) {
-	    this.in_right_move = false;
-	}
+    	dist = this.key_down[SHIFT]? 3:1;
+    	if (this.in_left_move === true) return;
+    	this.left_count = -1;
+    	this.left_started = false;
+    	this.in_left_move = true;
+    	if(this.in_right_move === true && this.right_started === false) {
+    	    this.in_right_move = false;
+    	}
 
     };
 
     this.startRightMove = function() {
 
-	dist = this.key_down[SHIFT]? 3:1;
-	if (this.in_right_move === true) return;
-	right_string.initBuffers(theCanvas.gl);
-	this.right_count = -1;
-	this.right_started = false;
-	this.in_right_move = true;
-	if(this.in_left_move === true && this.left_started === false) {
-	    this.in_left_move = false;
-	}
+    	dist = this.key_down[SHIFT]? 3:1;
+    	if (this.in_right_move === true) return;
+    	this.right_count = -1;
+    	this.right_started = false;
+    	this.in_right_move = true;
+    	if(this.in_left_move === true && this.left_started === false) {
+    	    this.in_left_move = false;
+    	}
     };
 
     this.endLeftMove = function() {
@@ -197,7 +180,6 @@ function Player(gl_, grid_size) {
 		    this.movement[1] = object.y_max;
 		    this.in_jump = false;
 		    this.jumping_down = false;
-		    player_string.initBuffers(theCanvas.gl);
 		}
 	    } else if (this.movement_old[1] + this.height < object.y_min) {
 		this.movement[1] = object.y_min - this.height;
@@ -212,7 +194,6 @@ function Player(gl_, grid_size) {
 		this.endLeftMove();
 	    } else if (this.movement_old[0] + this.width <= object.x_min) {
 		object.collided = WALL_W;
-		collision_string.initBuffers(theCanvas.gl);
 		// Convert to 1.0 scale, round to integer, convert back
 		this.movement[0] = this.grid * Math.floor(this.movement[0] / this.grid);
 		this.endRightMove();
