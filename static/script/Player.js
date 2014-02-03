@@ -83,7 +83,8 @@ function Player(gl_, game) {
     	game.matrix.push();
     	game.matrix.translate(this.movement);
     	var shader = theCanvas.changeShader("player");
-    	gl_.uniform1f(shader.unis["hi_hat_u"], hi_hat);
+        gl_.uniform1f(shader.unis["hi_hat_u"], hi_hat);
+        gl_.uniform1i(shader.unis["sampler1"], gl_.texNum["drawing"]);
     	theMatrix.setVertexUniforms(shader);
 
     	this.o.draw(gl_);
@@ -240,19 +241,17 @@ function Player(gl_, game) {
 	if (this.in_jump === true && this.jump_started === true) {
 
 	    if (this.jumping_up === true) {
-		var count = (++this.jump_count);
-		var up_dist = 15 - (count / 2);
-		if (up_dist <= 0) {
-		    this.jumping_up = false;
-		    this.jumping_down = true;
-		    this.jump_count = 0;
-		} else {
-		    this.movement[1] += up_dist;
-		}
+    		var up_dist = 18 - ((++this.jump_count) / 2);
+    		if (up_dist <= 0) {
+    		    this.jumping_up = false;
+    		    this.jumping_down = true;
+    		    this.jump_count = 0;
+    		} else {
+    		    this.movement[1] += up_dist;
+    		}
 
 	    } else {
-		var count = (++this.jump_count);
-		this.movement[1] -= count;
+    		this.movement[1] -= (++this.jump_count);
 	    }
 	}
     };

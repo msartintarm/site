@@ -296,7 +296,6 @@ function GLcanvas() {
         // This is so the two can be compared
         gl_shader.count = (++this.shader_count);
 
-        gl_shader.sampler = 0;
         gl_shader.attribs = [];
         gl_shader.attrib_enabled = [];
         gl_shader.unis = [];
@@ -329,7 +328,7 @@ function GLcanvas() {
         this.initUniform(gl_shader, "lMatU"); // Lighting matrix
         this.initUniform(gl_shader, "lightPosU"); // Initial light's position
 
-        for(var i_ = 0; i_ < 11; ++i_) {
+        for(var i_ = 0; i_ < 3; ++i_) {
 	    this.initUniform(gl_shader, "sampler" + i_);
         }
 

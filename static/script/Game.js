@@ -2,8 +2,6 @@
  * Creates and initializes a game.
  */
 
-GRID_SIZE = 50;
-
 function Game(gl_) {
 
     var level0 = new GameLevel(gl_, "#config-json");
@@ -43,6 +41,8 @@ function Game(gl_) {
 
     var player = new Player(gl_, this);
 
+    this.drawing = new GLsprite("textures/one.png", "drawing");
+
     // Map uniforms ourself
     GLobject.draw_optimized = true;
 
@@ -67,51 +67,53 @@ function Game(gl_) {
 
     this.draw = function(gl_) {
 
-	if (audio.analyze() === true) this.hi_hat = 11;
-	else if (this.hi_hat > 0) this.hi_hat -= 1;
+    	if (audio.analyze() === true) this.hi_hat = 11;
+    	else if (this.hi_hat > 0) this.hi_hat -= 1;
 
-	// Analyse movement, which draws upon sound, and activated moves.
-	this.updateMovement();
+    	// Analyse movement, which draws upon sound, and activated moves.
+    	this.updateMovement();
 
-	// The draw calls themself. Heavily optimize here by manually loading
-	// matrices and setting shaders. This reduces redundant calls
-	// to shader progs.
+    	// The draw calls themself. Heavily optimize here by manually loading
+    	// matrices and setting shaders. This reduces redundant calls
+    	// to shader progs.
 
-	//    this.player : gl_.shader_player
-	//    this.background : gl_.shader_canvas
-	//    this.floor : gl_.shader
+    	//    this.player : gl_.shader_player
+    	//    this.background : gl_.shader_canvas
+    	//    this.floor : gl_.shader
 
-	var shader = theCanvas.changeShader("default");
-	theMatrix.setViewUniforms(shader);
-	var unis = shader.unis;
-	gl_.uniform1f(unis["hi_hat_u"], this.hi_hat);
-	gl_.uniform1f(unis["wall_hit_u"], this.floor_effect);
-	gl_.uniform3fv(unis["lightPosU"], [2, 2, -40]);
-	gl_.uniform1i(unis["sampler1"], gl_.texNum["brick_normal.jpg"]);
+    	var shader = theCanvas.changeShader("default");
+    	this.matrix.setViewUniforms(shader);
+    	var unis = shader.unis;
+    	gl_.uniform1f(unis["hi_hat_u"], this.hi_hat);
+    	gl_.uniform1f(unis["wall_hit_u"], this.floor_effect);
+    	gl_.uniform3fv(unis["lightPosU"], [2, 2, -40]);
+    	gl_.uniform1i(unis["sampler1"], gl_.texNum["brick_normal.jpg"]);
 
-	for(i = 0; i < this.floor.length; ++i){
-	    this.floor[i].draw(gl_);
-	}
+    	for(i = 0; i < this.floor.length; ++i){
+    	    this.floor[i].draw(gl_);
+    	}
 
-	for(i = 0; i < this.push_button.length; ++i){
-	    this.push_button[i].draw(gl_);
-	}
+    	for(i = 0; i < this.push_button.length; ++i){
+    	    this.push_button[i].draw(gl_);
+    	}
 
-	player.draw(gl_, this.hi_hat);
+    	player.draw(gl_, this.hi_hat);
 
-	theMatrix.push();
-	theMatrix.translate(this.bg_movement);
+    	this.matrix.push();
+    	this.matrix.translate(this.bg_movement);
 
-	shader = theCanvas.changeShader("canvas");
-	theMatrix.setVertexUniforms(shader);
-	gl_.uniform1i(shader.unis["sampler1"], gl_.texNum["heaven_Normal.jpg"]);
+    	shader = theCanvas.changeShader("canvas");
+    	this.matrix.setVertexUniforms(shader);
+    	gl_.uniform1i(shader.unis["sampler1"], gl_.texNum["heaven_Normal.jpg"]);
 
-	this.background.draw(gl_);
-	theMatrix.pop();
+    	this.background.draw(gl_);
+    	this.matrix.pop();
 
 
     };
 
+    var kTick = 15;
+    var kCount = 30;
     this.camera = {
       game: this,
       in_left_move: false,
@@ -122,15 +124,15 @@ function Game(gl_) {
       startLeftMove: function() {
 
         if (this.in_left_move === true || this.in_right_move === true) return;
-        this.movement[0] -= (15 * this.game.grid);
-        this.left_count = 30;
+        this.movement[0] -= (kTick * kCount);
+        this.left_count = kCount;
         this.in_left_move = true;
       },
       startRightMove: function() {
 
         if (this.in_right_move === true || this.in_left_move === true) return;
-        this.movement[0] += (15 * this.game.grid);
-        this.right_count = 30;
+        this.movement[0] += (kTick * kCount);
+        this.right_count = kCount;
         this.in_right_move = true;
       },
       checkPosition: function(x_pos) {
@@ -139,11 +141,11 @@ function Game(gl_) {
 
         if (this.in_right_move === true) {
             if ((--this.right_count) < 0) this.in_right_move = false;
-            else this.game.matrix.vTranslate([this.game.grid * 0.5, 0, 0]);
+            else this.game.matrix.vTranslate([kTick, 0, 0]);
         }
         if (this.in_left_move === true) {
             if ((--this.left_count) < 0) this.in_left_move = false;
-            else this.game.matrix.vTranslate([-this.game.grid * 0.5, 0, 0]);
+            else this.game.matrix.vTranslate([-kTick, 0, 0]);
         }
       }
     };

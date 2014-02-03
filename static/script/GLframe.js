@@ -10,13 +10,7 @@ function GLframe(texture_num) {
     this.num = texture_num;
     theCanvas.gl.texNum[this.num] = -1;
     this.frameBuff = null;
-    this.height = 400;
-    lightPos[1] = this.height;
-    var playa_radius = 25;
-    this.playa = new Sphere(playa_radius).translate([0, 0, playa_radius - this.height]);
 }
-
-GLframe.frame_draw = false;
 
 GLframe.prototype.init = function(gl_) {
 
@@ -35,13 +29,9 @@ GLframe.prototype.init = function(gl_) {
 
     // don't really need this unless it's overwriting another texture
     gl_.activeTexture(gl_.TEXTURE0 + this.active);
-
     gl_.bindTexture(gl_.TEXTURE_2D, this.texture);
-    gl_.texParameteri(gl_.TEXTURE_2D,
-		      gl_.TEXTURE_MAG_FILTER, gl_.LINEAR);
-    gl_.texParameteri(gl_.TEXTURE_2D,
-		      gl_.TEXTURE_MIN_FILTER,
-		      gl_.LINEAR_MIPMAP_LINEAR);
+
+    GLtexture.initSquareTexture(gl_);
     gl_.texImage2D(gl_.TEXTURE_2D, 0, gl_.RGBA,
 		   this.frameBuff.width, this.frameBuff.height,
 		   0, gl_.RGBA, gl_.UNSIGNED_BYTE, null);
@@ -65,9 +55,7 @@ GLframe.prototype.init = function(gl_) {
 
     // -- check to make sure everything is init'ed -- //
     if(gl_.checkFramebufferStatus(gl_.FRAMEBUFFER) !==
-       gl_.FRAMEBUFFER_COMPLETE) {
-	alert("yo, framebuffer not working dawg");
-    }
+       gl_.FRAMEBUFFER_COMPLETE) alert("yo, framebuffer not working dawg");
 
     gl_.bindRenderbuffer(gl_.RENDERBUFFER, null);
     gl_.bindFramebuffer(gl_.FRAMEBUFFER, null);
@@ -75,13 +63,7 @@ GLframe.prototype.init = function(gl_) {
 
     var sampler_num = (++(gl_.shader.sampler));
 
-    theCanvas.changeShader(gl_.shader);
-    gl_.uniform1i(gl_.getUniformLocation(
-	gl_.shader, "sampler" + sampler_num), this.active);
-
-    theCanvas.status.innerHTML +=
-    "frame: [" + this.active + "," + sampler_num + "," + this.num + "]</br>";
-    console.log("frame: [" + this.active + "," + sampler_num + "," + this.num + "]");
+    console.log("frame: [" + this.active + "," + this.num + "]");
 };
 
 /**
@@ -92,20 +74,13 @@ GLframe.prototype.init = function(gl_) {
  * 5. Updates texture used by main framebuffer
  */
 
-var every_other = 0;
-GLframe.prototype.drawScene = function(gl_) {
-
-    if(GLframe.frame_draw === true || (++every_other) % 5 !== 0) return;
+GLframe.prototype.draw = function(gl_) {
 
     gl_.activeTexture(gl_.TEXTURE0 + this.active);
     gl_.viewport(0, 0, this.frameBuff.width, this.frameBuff.height);
     gl_.bindTexture(gl_.TEXTURE_2D, null);
-    gl_.bindFramebuffer(gl_.FRAMEBUFFER,
-			this.frameBuff);
-    gl_.clear(gl_.COLOR_BUFFER_BIT |
-	      gl_.DEPTH_BUFFER_BIT);
-
-    GLframe.frame_draw = true;
+    gl_.bindFramebuffer(gl_.FRAMEBUFFER, this.frameBuff);
+    gl_.clear(gl_.COLOR_BUFFER_BIT | gl_.DEPTH_BUFFER_BIT);
 
     // edit vMatrix here
     // theMatrix.vMatrixChanged = true;
@@ -113,13 +88,10 @@ GLframe.prototype.drawScene = function(gl_) {
     theCanvas.drawScene();
 
     this.playa.draw(gl_);
-    GLframe.frame_draw = false;
 
     gl_.bindFramebuffer(gl_.FRAMEBUFFER, null);
     gl_.bindTexture(gl_.TEXTURE_2D, this.texture);
     gl_.generateMipmap(gl_.TEXTURE_2D);
-    gl_.viewport(0, 0,
-		 gl_.drawingBufferWidth,
-		 gl_.drawingBufferHeight);
+    gl_.viewport(0, 0, gl_.drawingBufferWidth, gl_.drawingBufferHeight);
 
 };

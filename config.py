@@ -13,7 +13,7 @@ import re, json
 #  Can also specify loops of continuous increments
  
 level = {
-	"grid-size": 50,
+	"grid-size": 75,
         "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
 	    "audio": [["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
 	              ["music/move.wav", "audio-output"],
