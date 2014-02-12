@@ -36,29 +36,13 @@ function GLshader() {
 
 }
 
-/**
- * Given two DOM elements corresponding to a shader and button,
- *  returns function that displays the shader.
- */
-GLshader.view = function(button, shader) {
-
-    return function() {
-        button.value = "Close Shaders";
-        button.onclick = GLshader.close(button, shader);
-        shader.style.display = "inline-block";
-    };
-};
-
-/**
- * Toggles a shader on / off, and switches the button.
- */
-GLshader.close = function(button, shader) {
-
-    return function() {
-        button.value = "View Shaders";
-        button.onclick = GLshader.view(button, shader);
-        shader.style.display = "none";
-    };
+GLshader.setupViewer = function() {
+    var shaders_open = false;    
+    $("#shader_viewer").click(function() {
+        shaders_open = !shaders_open;
+        this.value = shaders_open? "Close Shaders": "View Shaders";
+        ("#shader1").toggleClass("hidden");
+    });
 };
 
 /*

@@ -14,10 +14,6 @@ function GLcanvas() {
 
     this.resizeCounter = 0;
 
-    $("#shader_viewer").click(function() {
-        GLshader.view(this, $("#shader1")[0]);
-    });
-
     this.fullscreen = function() {
         // One-time display methods
         $("#header").hide();

@@ -77,6 +77,7 @@
       window.theCanvas.start($(this).val().toLowerCase());
     }
     $buttons.click(startButton);
+    GLshader.setupViewer();
 
     callColorChange();
   }
