@@ -14,24 +14,40 @@ import re, json
  
 level = {
 	"grid-size": 75,
-        "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
-	    "audio": [["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
-	              ["music/move.wav", "audio-output"],
-	              ["music/jump1.wav", "audio-output"],
-	              ["music/jump2.wav", "audio-output"],
-	              ["music/jump3.wav", "audio-output"],
-	              ["music/jump4.wav", "audio-output"],
-	              ["music/background.wav", "audio-delay", "loop", "0", "8"]],
-	    "pieces": [
-	    	["floor", "rug.jpg", "1", "3", ["-11,-1", "20*(+1,+0)"]],
-	    	["wall", "brick.jpg", "1", "1", [
-	        	"6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
-	            "+4,-2", "4*(+2,+0)",
-	            "-4,+2", "4*(-2,+0)",
-	            "+4,-2", "4*(+2,+0)",
-	            "-4,+2", "4*(-2,+0)",
-	            "+2,-3", "20*(+1,+0)"]]],
-	"start-position": ["0", "300", "750"]
+  "textures": ["brick.jpg", "heaven.jpg", "rug.jpg", "heaven_Normal.jpg", "brick_normal.jpg"],
+  "audio": [
+  	["music/beats.mp3", "audio-low-pass", "loop", "1", "8"],
+    ["music/move.wav", "audio-output"],
+    ["music/jump1.wav", "audio-output"],
+    ["music/jump2.wav", "audio-output"],
+    ["music/jump3.wav", "audio-output"],
+    ["music/jump4.wav", "audio-output"],
+    ["music/background.wav", "audio-delay", "loop", "0", "8"]
+  ], "pieces": [
+  	["floor", "rug.jpg", "1", "3", ["-11,-1", "20*(+1,+0)"]],
+  	["chameleon", "heaven.jpg", "1", "1", ["0,3","0,7","0,11"]],
+  	["wall", "brick.jpg", "1", "1", [
+			"6,3", "+1,+1", "+1,+1", "+1,+1", "12*(+1,+0)",
+			"+4,-2", "4*(+2,+0)",
+			"-4,+2", "4*(-2,+0)",
+			"+4,-2", "4*(+2,+0)",
+			"-4,+2", "4*(-2,+0)",
+			"+2,-3", "20*(+1,+0)"]]],
+	"start-position": ["0", "300", "750"],
+	"triggers": { 
+    # audio triggers: piece name, piece index, name of audio
+  	"audio": [
+	  	["floor", "0", "music/trigger1.wav"],
+	  	["floor", "10", "music/trigger2.wav"],
+	  	["floor", "20", "music/trigger3.wav"]
+		],
+		# bullet triggers: piece name, piece index, direction of bullet (NSWE)
+		"bullet": [
+	  	["chameleon", "0", "N"],
+	  	["chameleon", "1", "S"],
+	  	["chameleon", "2", "E"]
+		]
+	}
 }
 
 regex = re.compile(r"(?:([0-9]+)\*\()?([-+])*([0-9]+)\,([-+])*([0-9]+)\)?")

@@ -20,8 +20,8 @@ function GLshader() {
         return f.value;
     };
 
-    this.f_decls = frameFn("shader_default", "f_decls");
-    this.v_decls = frameFn("shader_default", "v_decls");
+    this.f_decls = frameFn("shader_decls", "f_decls");
+    this.v_decls = frameFn("shader_decls", "v_decls");
 
     this.fragment["color"] = frameFn("shader_color", "frag");
     this.fragment["canvas"] = frameFn("shader_canvas", "frag");

@@ -32,10 +32,11 @@ function Game(gl_) {
 
     this.matrix.vTranslate(level0.getStartPos());
 
-    this.floor = level0.getPiece(0);
     this.floor_effect = 0;          // new shader effect
 
-    this.push_button = level0.getPiece(1);
+    this.floor = level0.getPiece("floor");
+    this.push_button = level0.getPiece("wall");
+    this.chameleon = level0.getPiece("chameleon");
 
     this.grid = level0.getGrid();
 
@@ -61,8 +62,11 @@ function Game(gl_) {
     	player.initBuffers(gl_);
     	this.background.initBuffers(gl_);
 
-    	this.floor.forEach(function(flo) { flo.initBuffers(gl_); });
-    	this.push_button.forEach(function(but) { but.initBuffers(gl_); });
+      function bufferz(piece) { piece.initBuffers(gl_); }
+
+    	this.floor.forEach(bufferz);
+      this.push_button.forEach(bufferz);
+      this.chameleon.forEach(bufferz);
     };
 
     this.draw = function(gl_) {
@@ -93,9 +97,13 @@ function Game(gl_) {
     	    this.floor[i].draw(gl_);
     	}
 
-    	for(i = 0; i < this.push_button.length; ++i){
-    	    this.push_button[i].draw(gl_);
-    	}
+      for(i = 0; i < this.push_button.length; ++i){
+          this.push_button[i].draw(gl_);
+      }
+
+      for(i = 0; i < this.chameleon.length; ++i){
+          this.chameleon[i].draw(gl_);
+      }
 
     	player.draw(gl_, this.hi_hat);
 
@@ -159,9 +167,12 @@ function Game(gl_) {
         };
     }
 
-    var audio_check1 = collision_check(this.push_button[0], audio.triggerLoop.bind(audio, "music/trigger1.wav"));
-    var audio_check2 = collision_check(this.push_button[10], audio.triggerLoop.bind(audio, "music/trigger2.wav"));
-    var audio_check3 = collision_check(this.push_button[20], audio.triggerLoop.bind(audio, "music/trigger3.wav"));
+    var audio_check = [];
+
+
+    audio_check.push(collision_check(this.push_button[0], audio.triggerLoop.bind(audio, "music/trigger1.wav")));
+    audio_check.push(collision_check(this.push_button[10], audio.triggerLoop.bind(audio, "music/trigger2.wav")));
+    audio_check.push(collision_check(this.push_button[20], audio.triggerLoop.bind(audio, "music/trigger3.wav")));
 
     player.setMoveMethod(audio.playSound);
 
@@ -175,17 +186,15 @@ function Game(gl_) {
     	var i;
     	var length1 = this.floor.length;
 
-    	for(i = length1 + this.push_button.length - 1; i >= 0; --i) {
+        function checkCollision(obj){ player.detectCollision(obj); }
 
-    	    var object = (i < length1)? this.floor[i]: this.push_button[i - length1];
-    	    player.detectCollision(object);
-    	}
+        this.floor.forEach(checkCollision);
+        this.push_button.forEach(checkCollision);
+        this.chameleon.forEach(checkCollision);
 
-    	player.movePostCollision();
+	   player.movePostCollision();
 
-    audio_check1();
-    audio_check2();
-    audio_check3();
+       audio_check.forEach(function(a) { a(); })
 
     };
 

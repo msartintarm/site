@@ -142,21 +142,6 @@ function GLaudio() {
 
     };
 
-    /**
-     * Create audio that is triggered by a specific event.
-     * Returns funct to play the audio..?
-     */
-    this.triggerAudio = function (uri, dest, length, condition_fn) {
-        var create_fn = this.createAudio.bind(this, uri, dest, true, 0, length);
-        return function() {
-            if(condition_fn()) {
-                create_fn();
-                return true;
-            }
-            else return false;
-        };
-    };
-
     /*
      * Automatically begins a looped function. Great as the destination of a 
      * triggered event

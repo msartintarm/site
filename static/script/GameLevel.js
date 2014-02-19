@@ -7,7 +7,7 @@ function GameLevel(gl_, config_container) {
 
     var config = $.parseJSON($(config_container).val());
 
-    this.pieces = [];
+    this.pieces = {};
 
     // Either op doesn't exist (val, is a '-' (= dec old), or is  a '+' (= inc old)
     var newCoordVal = function(old, op, val) {
@@ -94,7 +94,7 @@ function GameLevel(gl_, config_container) {
             }
 
         }
-        this.pieces.push(piece);
+        this.pieces[p[0]] = piece;
     };
 
     this.initPieces = function() {
@@ -103,5 +103,5 @@ function GameLevel(gl_, config_container) {
         }, this);
     };
 
-    this.getPiece = function(index) { return this.pieces[index]; };
+    this.getPiece = function(name) { return this.pieces[name]; };
 }

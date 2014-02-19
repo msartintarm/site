@@ -9,20 +9,18 @@
   <body>
     <textarea id="frag" rows="3" cols="25"class="shader">
 
-      void colorTexture(sampler2D theSampler) {
-        vec3 textureColor = texture2D(theSampler, vec2(textureV.s, textureV.t)).xyz;
+      void colorBumpTexture(sampler2D textureSamp, sampler2D bumpSamp) {
 
+        vec3 samp = texture2D(textureSamp, vec2(textureV.s, textureV.t)).xyz;
+        vec3 bump = texture2D(bumpSamp, vec2(-textureV.s, -textureV.t)).xyz;
+        float diffuseV2 = dot(vertNorm, normalize(lightNorm));
 
-        vec3 textureColorz = texture2D(sampler1, vec2(-textureV.s, -textureV.t)).xyz;
         vec3 reflectionV2 = reflect(
-          normalize(lightNorm),
           normalize(
             normalize(vertNorm) + 
-            normalize(vec3(
-              -textureColorz.x, 
-              -textureColorz.y, 
-              -textureColorz.z))));
-        float diffuseV2 = dot(vertNorm, normalize(lightNorm));
+            normalize(vec3(-bump.x, -bump.y, -bump.z))),
+          normalize(lightNorm)
+);
 
         float specularV2 = dot(
           normalize(reflectionV2),
@@ -30,23 +28,19 @@
         if (specularV2 <= 0.0) { specularV2 = 0.0; }
         specularV2 = specularV2 * specularV2;
         specularV2 = specularV2 * specularV2;
-        specularV2 = specularV2 * specularV2;
-        specularV2 = specularV2 * specularV2;
 
-        vec3 ambColor = textureColor / 3.0 * ambient_coeff_u;
-        vec3 diffColor = textureColor * diffuseV2 * 0.7;
-        vec3 specColor = textureColor * specularV2;
-        vec3 normalColor = ambColor + diffColor + specColor;
+        // Calculate ambient, diffuse, and specular colors
+        vec3 amb = samp / 3.0 * ambient_coeff_u;
+        vec3 diff = samp * diffuseV2 * 0.7;
+        vec3 spec = samp * specularV2;
 
-        float wall_hit_coeff = wall_hit_u / 40.0;
-        gl_FragColor = vec4(normalColor + ((ambColor + normalColor) *
-        wall_hit_coeff), 1.0);
+        gl_FragColor = vec4(amb + diff + spec, 1.0);
         }
 
 
-		        void main(void) {
-						       colorTexture(sampler0);
-									       }
+        void main(void) {
+  	      colorBumpTexture(sampler0, sampler1);
+        }
 									       </textarea>
     <textarea id="vert" rows="3" cols="25" class="shader">
       void main(void) {
@@ -54,13 +48,12 @@
       gl_Position = pMatU * mvnMatU[1] * mvnMatU[0] * vec4(vPosA, 1.0);
 
       // Viewing space coordinates of light / vertex
-      vModel = (mvnMatU[1] * mvnMatU[0]  * vec4(vPosA, 1.0)).xyz;
-      lModel = mvnMatU[1] * mvnMatU[0] * vec4(lightPosU, 1.0);
+      vModel = (mvnMatU[1] * mvnMatU[0] * vec4(vPosA, 1.0)).xyz;
+      lModel = mvnMatU[0] * mvnMatU[1] * vec4(lightPosU, 1.0);
 
 
       // -- Lighting -- //
-      distanceV = vModel.xyz - lModel.xyz;
-      lightNorm = normalize(distanceV);
+      lightNorm = normalize(vModel.xyz - lModel.xyz);
       vertNorm = (mvnMatU[2] * vec4(vNormA,1.0)).xyz;
 
       // Ambient components we'll leave until frag shader
